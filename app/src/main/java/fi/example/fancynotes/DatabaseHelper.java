@@ -2,6 +2,7 @@ package fi.example.fancynotes;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -9,8 +10,10 @@ import android.util.Log;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "DatabaseHelper";
     private static final String TABLE_NAME = "notes_table";
-    private static final String COL1 = "ID";
-    private static final String COL2 = "note";
+    //Column 0
+    private static final String COL0 = "ID";
+    //Column 1
+    private static final String COL1 = "note";
 
     public DatabaseHelper(Context context) {
         super(context,TABLE_NAME,null,1 );
@@ -18,7 +21,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-            String createTable = "CREATE TABLE " + TABLE_NAME + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COL2 + " TEXT)";
+            String createTable = "CREATE TABLE " + TABLE_NAME + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COL1 + " TEXT)";
             db.execSQL(createTable);
     }
 
@@ -30,7 +33,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean addData(String item) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COL2, item);
+        contentValues.put(COL1, item);
 
         Log.d(TAG, "addData: Adding" + item + " to " + TABLE_NAME);
 
@@ -44,4 +47,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
     }
+
+    public Cursor getData() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME;
+        Cursor data = db.rawQuery(query,null);
+        return data;
+    }
+
 }
