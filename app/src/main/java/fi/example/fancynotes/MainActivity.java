@@ -27,6 +27,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void seeAllNotes(View v) {
+        Intent i = new Intent(this, CardViewActivity.class);
+        startActivity(i);
+    }
+
     public ArrayList<String> getStringArrayListFromSQLiteDatabase() {
         Cursor data = mDatabaseHelper.getData();
         ArrayList<String> listData = new ArrayList<>();
