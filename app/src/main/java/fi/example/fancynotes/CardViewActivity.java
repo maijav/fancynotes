@@ -25,6 +25,7 @@ public class CardViewActivity extends AppCompatActivity{
         noteList = new ArrayList<Note>();
         noteList.add(new Note("Test", "Test"));
         noteList.add(new Note("Test", "Test"));
+        noteList.add(new Note("Test", "Test"));
 
         Intent intent = getIntent();
         if(intent.hasExtra("fi.example.fancynotes.notes") && intent.hasExtra("fi.example.fancynotes.photo")){
@@ -41,7 +42,7 @@ public class CardViewActivity extends AppCompatActivity{
 
         RecyclerView myRv = (RecyclerView) findViewById(R.id.recyclerview_id);
         RecyclerView_Adapter myAdapter = new RecyclerView_Adapter(this, noteList);
-        myRv.setLayoutManager(new GridLayoutManager(this, 3));
+        myRv.setLayoutManager(new GridLayoutManager(this, 2));
         myRv.setAdapter(myAdapter);
     }
 }

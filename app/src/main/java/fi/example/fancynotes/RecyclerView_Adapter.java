@@ -18,7 +18,7 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adap
 
     private Context mContext;
     private List<Note> mData;
-    private Uri thumbnail;
+//    private Uri thumbnail;
 
     public RecyclerView_Adapter(Context mContext, List<Note> mData) {
         this.mContext = mContext;
@@ -39,8 +39,8 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adap
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
 
-        thumbnail = Uri.parse(mData.get(position).getThumbnail());
-        holder.item_thumbnail.setImageURI(thumbnail);
+//        thumbnail = Uri.parse(mData.get(position).getThumbnail());
+//        holder.item_thumbnail.setImageURI(thumbnail);
 
         //on click listener
 
@@ -72,7 +72,7 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adap
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            item_thumbnail = (ImageView) itemView.findViewById(R.id.img_id);
+//            item_thumbnail = (ImageView) itemView.findViewById(R.id.img_id);
             cardView = (CardView) itemView.findViewById(R.id.cardview_id);
         }
     }
