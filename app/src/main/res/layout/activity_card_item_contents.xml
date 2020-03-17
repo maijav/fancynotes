@@ -20,7 +20,7 @@
 
             <ImageView
                 android:layout_width="300dp"
-                android:layout_height="600dp"
+                android:layout_height="300dp"
                 android:background="#2d2d2d"
                 android:id="@+id/itemthumbnail"
                 android:scaleType="centerCrop"/>
@@ -32,6 +32,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Description"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edit"
+                android:text="Edit"
+                android:onClick="editNote"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/delete"
+                android:text="Delete"
+                android:onClick="deleteNote"/>
 
         </LinearLayout>
 

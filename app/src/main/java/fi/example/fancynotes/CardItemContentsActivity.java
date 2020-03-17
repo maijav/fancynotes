@@ -3,6 +3,8 @@ package fi.example.fancynotes;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,6 +25,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
         img = (ImageView) findViewById(R.id.itemthumbnail);
 
         //Receiving data
+        Log.d("PAPA","HI");
 
         Intent intent = getIntent();
         String description = intent.getExtras().getString("fi.example.fancynotes.description");
@@ -30,5 +33,13 @@ public class CardItemContentsActivity extends AppCompatActivity {
 
         tvDesc.setText(description);
         img.setImageURI(image);
+    }
+
+    public void editNote(View view) {
+
+    }
+
+    public void deleteNote(View view) {
+
     }
 }

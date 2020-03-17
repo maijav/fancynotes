@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -36,6 +37,7 @@ public class CardViewActivity extends AppCompatActivity{
         noteList.add(new Note("Test", "Test"));
 
         while(data.moveToNext()){
+            String id = data.getString(0);
             String title = data.getString(1);
             String text = data.getString(2);
             noteList.add(new Note(text, "test"));
