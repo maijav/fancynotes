@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CardViewActivity extends AppCompatActivity{
@@ -34,15 +37,35 @@ public class CardViewActivity extends AppCompatActivity{
 
             if(photo1 != null && notes != null) {
                 //photo = Uri.parse(photo1);
-                //outfitList = OutfitList.getInstance().outfitlist;
                 noteList.add(new Note(notes, photo1));
             }
         }
 
 
         RecyclerView myRv = (RecyclerView) findViewById(R.id.recyclerview_id);
-        RecyclerView_Adapter myAdapter = new RecyclerView_Adapter(this, noteList);
+        final RecyclerView_Adapter myAdapter = new RecyclerView_Adapter(this, noteList);
         myRv.setLayoutManager(new GridLayoutManager(this, 2));
         myRv.setAdapter(myAdapter);
+
+        ItemTouchHelper moveItemHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN |
+                ItemTouchHelper.UP | ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT, 0 ) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder dragged, @NonNull RecyclerView.ViewHolder target) {
+                int position_dragged = dragged.getAdapterPosition();
+                int position_target = target.getAdapterPosition();
+
+                Collections.swap(noteList, position_dragged, position_target);
+
+                myAdapter.notifyItemMoved(position_dragged, position_target);
+
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+        });
+        moveItemHelper.attachToRecyclerView(myRv);
     }
 }
