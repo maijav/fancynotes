@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -62,6 +63,7 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adap
     public int getItemCount() {
         return mData.size();
     }
+
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 

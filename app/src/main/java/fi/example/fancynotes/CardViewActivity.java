@@ -3,6 +3,7 @@ package fi.example.fancynotes;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +31,8 @@ public class CardViewActivity extends AppCompatActivity{
         noteList.add(new Note("Test", "Test"));
         noteList.add(new Note("Test", "Test"));
 
+
+
         Intent intent = getIntent();
         if(intent.hasExtra("fi.example.fancynotes.notes") && intent.hasExtra("fi.example.fancynotes.photo")){
             notes = intent.getExtras().getString("fi.example.fancynotes.notes");
@@ -40,7 +43,6 @@ public class CardViewActivity extends AppCompatActivity{
                 noteList.add(new Note(notes, photo1));
             }
         }
-
 
         RecyclerView myRv = (RecyclerView) findViewById(R.id.recyclerview_id);
         final RecyclerView_Adapter myAdapter = new RecyclerView_Adapter(this, noteList);
@@ -67,5 +69,10 @@ public class CardViewActivity extends AppCompatActivity{
             }
         });
         moveItemHelper.attachToRecyclerView(myRv);
+    }
+
+    public void setCardItemBackground(int image){
+        LinearLayout noteItemLayout = (LinearLayout) findViewById(R.id.noteItem);
+        noteItemLayout.setBackgroundResource(image);
     }
 }
