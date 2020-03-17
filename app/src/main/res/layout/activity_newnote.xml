@@ -17,6 +17,13 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/newTitleEditText"
+        android:hint="title"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
          android:id="@+id/newNoteEditText"
         android:hint="write note here"
         />

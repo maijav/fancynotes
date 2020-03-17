@@ -32,13 +32,4 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    public ArrayList<String> getStringArrayListFromSQLiteDatabase() {
-        Cursor data = mDatabaseHelper.getData();
-        ArrayList<String> listData = new ArrayList<>();
-        while(data.moveToNext()) {
-            //Get the value from the database in column 1 AKA "note"
-            listData.add(data.getString(1));
-        }
-        return listData;
-    }
 }
