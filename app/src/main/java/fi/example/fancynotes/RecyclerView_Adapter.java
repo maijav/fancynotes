@@ -3,6 +3,7 @@ package fi.example.fancynotes;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,6 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adap
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View view;
         LayoutInflater mInflater = LayoutInflater.from(mContext);
         view = mInflater.inflate(R.layout.card_view_item, parent, false);

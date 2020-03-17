@@ -1,6 +1,7 @@
 package fi.example.fancynotes;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.LinearLayout;
@@ -20,29 +21,37 @@ public class CardViewActivity extends AppCompatActivity{
     String notes;
     String photo1;
     List<Note> noteList;
+    DatabaseHelper mDatabaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cardview);
+        mDatabaseHelper = new DatabaseHelper(this);
+
+        Cursor data = mDatabaseHelper.getAllData();
 
         noteList = new ArrayList<Note>();
         noteList.add(new Note("Test", "Test"));
         noteList.add(new Note("Test", "Test"));
-        noteList.add(new Note("Test", "Test"));
 
-
-
-        Intent intent = getIntent();
-        if(intent.hasExtra("fi.example.fancynotes.notes") && intent.hasExtra("fi.example.fancynotes.photo")){
-            notes = intent.getExtras().getString("fi.example.fancynotes.notes");
-            photo1 = intent.getExtras().getString("fi.example.fancynotes.photo");
-
-            if(photo1 != null && notes != null) {
-                //photo = Uri.parse(photo1);
-                noteList.add(new Note(notes, photo1));
-            }
+        while(data.moveToNext()){
+            String title = data.getString(1);
+            String text = data.getString(2);
+            noteList.add(new Note(text, "test"));
         }
+//
+//
+//        Intent intent = getIntent();
+//        if(intent.hasExtra("fi.example.fancynotes.notes") && intent.hasExtra("fi.example.fancynotes.photo")){
+//            notes = intent.getExtras().getString("fi.example.fancynotes.notes");
+//            photo1 = intent.getExtras().getString("fi.example.fancynotes.photo");
+//
+//            if(photo1 != null && notes != null) {
+//                //photo = Uri.parse(photo1);
+//                noteList.add(new Note(notes, photo1));
+//            }
+//        }
 
         RecyclerView myRv = (RecyclerView) findViewById(R.id.recyclerview_id);
         final RecyclerView_Adapter myAdapter = new RecyclerView_Adapter(this, noteList);
@@ -69,10 +78,5 @@ public class CardViewActivity extends AppCompatActivity{
             }
         });
         moveItemHelper.attachToRecyclerView(myRv);
-    }
-
-    public void setCardItemBackground(int image){
-        LinearLayout noteItemLayout = (LinearLayout) findViewById(R.id.noteItem);
-        noteItemLayout.setBackgroundResource(image);
     }
 }
