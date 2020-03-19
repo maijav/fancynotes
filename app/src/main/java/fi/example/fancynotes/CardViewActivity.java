@@ -1,5 +1,6 @@
 package fi.example.fancynotes;
 
+import android.app.LauncherActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -23,6 +24,8 @@ public class CardViewActivity extends AppCompatActivity{
     String photo1;
     List<Note> noteList;
     DatabaseHelper mDatabaseHelper;
+    int item1Id;
+    int item2Id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +36,12 @@ public class CardViewActivity extends AppCompatActivity{
         Cursor data = mDatabaseHelper.getAllData();
 
         noteList = new ArrayList<Note>();
-        noteList.add(new Note(123,"Test", "Test"));
-        noteList.add(new Note(1413,"Test", "Test"));
 
         while(data.moveToNext()){
             int id = data.getInt(0);
             String title = data.getString(1);
             String text = data.getString(2);
+            Log.d("noteDATA", id + title + text);
             noteList.add(new Note(id, title, text));
         }
 //
@@ -64,14 +66,22 @@ public class CardViewActivity extends AppCompatActivity{
                 ItemTouchHelper.UP | ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT, 0 ) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder dragged, @NonNull RecyclerView.ViewHolder target) {
-                int position_dragged = dragged.getAdapterPosition();
-                int position_target = target.getAdapterPosition();
+                item1Id = noteList.get(dragged.getAdapterPosition()).getId();
+                item2Id = noteList.get(target.getAdapterPosition()).getId();
+                mDatabaseHelper.updateId(item1Id, 1000);
+                mDatabaseHelper.updateId(item2Id, item1Id);
+                mDatabaseHelper.updateId(1000, item2Id);
+                moveItem(dragged.getAdapterPosition(), target.getAdapterPosition());
+                return true;
+            }
 
-                Collections.swap(noteList, position_dragged, position_target);
-
-                myAdapter.notifyItemMoved(position_dragged, position_target);
-
-                return false;
+            private void moveItem(int oldPos, int newPos){
+                Note item = noteList.get(oldPos);
+                item1Id = item.getId();
+                noteList.remove(oldPos);
+                noteList.add(newPos, item);
+                myAdapter.notifyDataSetChanged();
+                myAdapter.notifyItemMoved(oldPos, newPos);
             }
 
             @Override

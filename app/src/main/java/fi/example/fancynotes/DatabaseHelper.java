@@ -56,8 +56,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean updateId (Integer oldId, Integer newId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query ="UPDATE " +  TABLE_NAME + "SET " + COL0 + " = " + newId + " WHERE " + COL0 + " = " + oldId;
+        String query ="UPDATE " +  TABLE_NAME + " SET " + COL0 + " = " + newId + " WHERE " + COL0 + " = " + oldId;
         db.rawQuery(query, null);
+        Cursor data = getAllData();
+        while(data.moveToNext()){
+            int id = data.getInt(0);
+            String title = data.getString(1);
+            String text = data.getString(2);
+            Log.d("noteDATA", id + title + text);
+        }
         return true;
     }
 
