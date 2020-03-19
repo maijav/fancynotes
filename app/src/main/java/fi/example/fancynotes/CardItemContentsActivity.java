@@ -28,7 +28,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
         Log.d("PAPA","HI");
 
         Intent intent = getIntent();
-        String description = intent.getExtras().getString("fi.example.fancynotes.description");
+        String description = intent.getExtras().getString("fi.example.fancynotes.note");
         Uri image = Uri.parse(getIntent().getExtras().getString("fi.example.fancynotes.thumbnail"));
 
         tvDesc.setText(description);

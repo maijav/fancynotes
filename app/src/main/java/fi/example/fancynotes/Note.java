@@ -1,31 +1,40 @@
 package fi.example.fancynotes;
 
 public class Note {
-    private String text;
-    private String thumbnail;
+    int id;
+    private String title;
+    private String note;
 
     public Note() {
     }
 
-    public Note(String text, String thumbnail) {
-        this.text = text;
-        this.thumbnail = thumbnail;
+    public Note(int id, String title, String note) {
+        this.id = id;
+        this.title = title;
+        this.note = note;
     }
 
-
-    public String getDescription() {
-        return this.text;
+    public int getId() {
+        return id;
     }
 
-    public String getThumbnail() {
-        return this.thumbnail;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setDescription(String text) {
-        this.text = text;
+    public String getTitle() {
+        return title;
     }
 
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

@@ -33,14 +33,14 @@ public class CardViewActivity extends AppCompatActivity{
         Cursor data = mDatabaseHelper.getAllData();
 
         noteList = new ArrayList<Note>();
-        noteList.add(new Note("Test", "Test"));
-        noteList.add(new Note("Test", "Test"));
+        noteList.add(new Note(123,"Test", "Test"));
+        noteList.add(new Note(1413,"Test", "Test"));
 
         while(data.moveToNext()){
-            String id = data.getString(0);
+            int id = data.getInt(0);
             String title = data.getString(1);
             String text = data.getString(2);
-            noteList.add(new Note(text, "test"));
+            noteList.add(new Note(id, title, text));
         }
 //
 //
