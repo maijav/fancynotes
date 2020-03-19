@@ -54,6 +54,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public boolean updateId (Integer oldId, Integer newId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COL0, newId);
+        db.update("contacts", contentValues, "id = ? ", new String[] { Integer.toString(oldId) } );
+        return true;
+    }
+
     public Cursor getAllData() {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME;
