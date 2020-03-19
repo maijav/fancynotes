@@ -58,7 +58,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL0, newId);
-        db.update("contacts", contentValues, "id = ? ", new String[] { Integer.toString(oldId) } );
+        db.update(TABLE_NAME, contentValues, "id = ? ", new String[] { Integer.toString(oldId) } );
         return true;
     }
 
@@ -105,7 +105,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL1, title);
         contentValues.put(COL2, note);
-        db.update("contacts", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
+        db.update(TABLE_NAME, contentValues, "id = ? ", new String[] { Integer.toString(id) } );
         return true;
     }
 
