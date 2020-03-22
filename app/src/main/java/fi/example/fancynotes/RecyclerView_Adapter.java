@@ -20,7 +20,7 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adap
 
     private Context mContext;
     private List<Note> mData;
-//    private Uri thumbnail;
+    private String cardBackground;
 
     public RecyclerView_Adapter(Context mContext, List<Note> mData) {
         this.mContext = mContext;
@@ -32,6 +32,7 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adap
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         LayoutInflater mInflater = LayoutInflater.from(mContext);
+
         view = mInflater.inflate(R.layout.card_view_item, parent, false);
 
         return new MyViewHolder(view);
@@ -40,8 +41,9 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adap
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
 
-//        thumbnail = Uri.parse(mData.get(position).getThumbnail());
-//        holder.item_thumbnail.setImageURI(thumbnail);
+        cardBackground = mData.get(position).getNoteBackground();
+        int resID = mContext.getResources().getIdentifier(cardBackground , "drawable", mContext.getPackageName());
+        holder.cardView.setBackgroundResource(resID);
 
         //on click listener
 

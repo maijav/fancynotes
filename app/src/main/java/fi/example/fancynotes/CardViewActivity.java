@@ -41,8 +41,9 @@ public class CardViewActivity extends AppCompatActivity{
             int id = data.getInt(0);
             String title = data.getString(1);
             String text = data.getString(2);
-            Log.d("noteDATA", id + title + text);
-            noteList.add(new Note(id, title, text));
+            String backGround = "note_placeholder";
+//            Log.d("noteDATA", id + title + text);
+            noteList.add(new Note(id, title, text, backGround));
         }
 //
 //

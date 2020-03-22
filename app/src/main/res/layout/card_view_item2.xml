@@ -17,7 +17,8 @@
         android:id="@+id/noteItem"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/note_placeholder2">
 
         <TextView
             android:textColor="#2d2d2d"
