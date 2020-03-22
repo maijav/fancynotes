@@ -5,6 +5,7 @@ public class Note {
     private String title;
     private String note;
     int orderId;
+    private String noteBackground;
 
     public Note() {
     }
@@ -17,11 +18,12 @@ public class Note {
         this.orderId = orderId;
     }
 
-    public Note(int id, int orderId, String title, String note) {
+    public Note(int id, int orderId, String title, String note, String noteBackground) {
         this.id = id;
         this.orderId = orderId;
         this.title = title;
         this.note = note;
+        this.noteBackground = noteBackground;
     }
 
     public int getId() {
@@ -46,5 +48,13 @@ public class Note {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getNoteBackground() {
+        return noteBackground;
+    }
+
+    public void setNoteBackground(String noteBackground) {
+        this.noteBackground = noteBackground;
     }
 }
