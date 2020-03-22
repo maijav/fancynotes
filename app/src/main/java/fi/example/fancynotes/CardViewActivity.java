@@ -26,6 +26,7 @@ public class CardViewActivity extends AppCompatActivity{
     DatabaseHelper mDatabaseHelper;
     int item1Id;
     int item2Id;
+    int orderIdOfDeleted = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +37,20 @@ public class CardViewActivity extends AppCompatActivity{
         Cursor data = mDatabaseHelper.getAllData();
 
         noteList = new ArrayList<Note>();
+        Intent intent = getIntent();
+        if(intent.hasExtra("fi.example.fancynotes.orderidofdeleted")) {
+            orderIdOfDeleted =  intent.getExtras().getInt("fi.example.fancynotes.orderidofdeleted");
+            Log.d("ORDERIDAFTERDELETE",  " FOUND " + orderIdOfDeleted);
+        }
 
         while(data.moveToNext()){
             int id = data.getInt(0);
             int orderId = data.getInt(1);
+            if(orderId > orderIdOfDeleted && orderIdOfDeleted > 0) {
+                mDatabaseHelper.updateOrderId(id,orderId-1);
+                orderId--;
+            }
+            Log.d("ORDERIDAFTERDELETE", orderId + " FOUND " + orderIdOfDeleted + " deleted one had");
             String title = data.getString(2);
             String text = data.getString(3);
             String backGround = data.getString(4);
@@ -73,9 +84,8 @@ public class CardViewActivity extends AppCompatActivity{
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder dragged, @NonNull RecyclerView.ViewHolder target) {
                 item1Id = noteList.get(dragged.getAdapterPosition()).getOrderId();
                 item2Id = noteList.get(target.getAdapterPosition()).getOrderId();
-                mDatabaseHelper.updateOrderId(item1Id, 1000);
-                mDatabaseHelper.updateOrderId(item2Id, item1Id);
-                mDatabaseHelper.updateOrderId(1000, item2Id);
+                mDatabaseHelper.updateOrderId(noteList.get(dragged.getAdapterPosition()).getId(), item2Id);
+                mDatabaseHelper.updateOrderId(noteList.get(target.getAdapterPosition()).getId(), item1Id);
                 moveItem(dragged.getAdapterPosition(), target.getAdapterPosition());
                 return true;
             }

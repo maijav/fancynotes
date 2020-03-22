@@ -62,8 +62,9 @@ public class CardItemContentsActivity extends AppCompatActivity {
         } else {
             toastMessage("Something went wrong!");
         }
-
         Intent i = new Intent(this, CardViewActivity.class);
+        Log.d("ORDERIDAFTERDELETE", orderId + " FOUND " + orderId + " deleted one had");
+        i.putExtra("fi.example.fancynotes.orderidofdeleted", orderId);
         startActivity(i);
     }
 

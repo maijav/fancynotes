@@ -63,21 +63,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public boolean updateOrderId (Integer oldOrderId, Integer newOrderId) {
+    public boolean updateOrderId (Integer ID, Integer newOrderId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL1, newOrderId);
-        db.update(TABLE_NAME, contentValues, "orderId = ? ", new String[] { Integer.toString(oldOrderId) } );
+        db.update(TABLE_NAME, contentValues, "id = ? ", new String[] { Integer.toString(ID) } );
 
-//        String query ="UPDATE " +  TABLE_NAME + " SET " + COL1 + " = " + newOrderId + " WHERE " + COL1 + " = " + oldOrderId;
-//        db.rawQuery(query, null);
-//        Cursor data = getAllData();
-//        while(data.moveToNext()){
-//            int orderId = data.getInt(1);
-//            String title = data.getString(1);
-//            String text = data.getString(2);
-//            Log.d("noteDATA", orderId + title + text);
-//        }
         return true;
     }
 
