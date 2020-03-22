@@ -15,6 +15,7 @@ public class NewNoteActivity extends AppCompatActivity {
     private Button addBtn;
     private EditText editTextNote;
     private EditText editTextTitle;
+    private String noteBackground;
 
     static int orderId = 1;
 
@@ -26,12 +27,13 @@ public class NewNoteActivity extends AppCompatActivity {
         editTextNote = (EditText) findViewById(R.id.newNoteEditText);
         editTextTitle = (EditText) findViewById(R.id.newTitleEditText);
         mDatabaseHelper = new DatabaseHelper(this);
+        noteBackground = "note_placeholder";
 
     }
 
 
     public void addNote(String newEntryTitle, String newEntryNote) {
-        boolean insertData = mDatabaseHelper.addData(orderId,newEntryTitle, newEntryNote);
+        boolean insertData = mDatabaseHelper.addData(orderId,newEntryTitle, newEntryNote, noteBackground);
 
         if(insertData) {
             toastMessage("Data successfully Inserted");
@@ -55,6 +57,19 @@ public class NewNoteActivity extends AppCompatActivity {
             addNote(newEntryTitle,newEntryNote);
         } else {
             toastMessage("You must put something in the note field.");
+        }
+    }
+
+    public void chooseNoteBackground(View v) {
+        switch (v.getId()) {
+            case R.id.blueNote:
+                noteBackground = "note_placeholder2";
+                break;
+            case R.id.pinkNote:
+                noteBackground = "note_placeholder";
+                break;
+            default:
+            throw new RuntimeException("Unknow button ID");
         }
     }
 }

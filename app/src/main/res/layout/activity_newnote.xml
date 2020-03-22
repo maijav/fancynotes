@@ -28,6 +28,39 @@
         android:hint="write note here"
         />
 
+    <TextView
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose note color:"/>
+
+    <LinearLayout
+        android:id="@+id/LinearLayout02"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/blueNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="chooseNoteBackground"
+            android:text="Blue">
+        </Button>
+        <Button
+            android:id="@+id/pinkNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Pink"
+            android:layout_marginBottom="30dp">
+        </Button>
+    </LinearLayout>
+
+
+
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
