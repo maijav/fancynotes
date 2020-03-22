@@ -4,12 +4,22 @@ public class Note {
     int id;
     private String title;
     private String note;
+    int orderId;
 
     public Note() {
     }
 
-    public Note(int id, String title, String note) {
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+
+    public Note(int id, int orderId, String title, String note) {
         this.id = id;
+        this.orderId = orderId;
         this.title = title;
         this.note = note;
     }

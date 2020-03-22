@@ -39,10 +39,11 @@ public class CardViewActivity extends AppCompatActivity{
 
         while(data.moveToNext()){
             int id = data.getInt(0);
-            String title = data.getString(1);
-            String text = data.getString(2);
+            int orderId = data.getInt(1);
+            String title = data.getString(2);
+            String text = data.getString(3);
             Log.d("noteDATA", id + title + text);
-            noteList.add(new Note(id, title, text));
+            noteList.add(new Note(id, orderId, title, text));
         }
 //
 //

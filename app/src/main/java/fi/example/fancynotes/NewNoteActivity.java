@@ -16,6 +16,8 @@ public class NewNoteActivity extends AppCompatActivity {
     private EditText editTextNote;
     private EditText editTextTitle;
 
+    static int orderId = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,10 +31,11 @@ public class NewNoteActivity extends AppCompatActivity {
 
 
     public void addNote(String newEntryTitle, String newEntryNote) {
-        boolean insertData = mDatabaseHelper.addData(newEntryTitle, newEntryNote);
+        boolean insertData = mDatabaseHelper.addData(orderId,newEntryTitle, newEntryNote);
 
         if(insertData) {
             toastMessage("Data successfully Inserted");
+            orderId++;
             Intent i = new Intent(this, CardViewActivity.class);
             startActivity(i);
         } else {

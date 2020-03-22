@@ -16,9 +16,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //Column 0
     private static final String COL0 = "ID";
     //Column 1
-    private static final String COL1 = "title";
+    private static final String COL1 = "orderId";
     //Column 2
-    private static final String COL2 = "note";
+    private static final String COL2 = "title";
+    //Column 3
+    private static final String COL3 = "note";
+
 
     public DatabaseHelper(Context context) {
         super(context,TABLE_NAME,null,1 );
@@ -26,7 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-            String createTable = "CREATE TABLE " + TABLE_NAME + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COL1 + " TEXT, " + COL2 + " TEXT)";
+            String createTable = "CREATE TABLE " + TABLE_NAME + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COL1 + " TEXT, " + COL2 + " TEXT," + COL3 + " TEXT)";
             db.execSQL(createTable);
     }
 
@@ -35,12 +38,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
     }
 
-    public boolean addData(String title, String note) {
+    public boolean addData(int orderId, String title, String note) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COL1, title);
-        contentValues.put(COL2, note);
+        contentValues.put(COL1, orderId);
+        contentValues.put(COL2, title);
+        contentValues.put(COL3, note);
 
+        Log.d(TAG, "addData: Adding" + orderId + " to " + TABLE_NAME);
         Log.d(TAG, "addData: Adding" + title + " to " + TABLE_NAME);
         Log.d(TAG, "addData: Adding" + note + " to " + TABLE_NAME);
         // -1 if not inserted correctly
@@ -109,8 +114,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean updateNote (Integer id, String title, String note) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COL1, title);
-        contentValues.put(COL2, note);
+        contentValues.put(COL2, title);
+        contentValues.put(COL3, note);
         db.update(TABLE_NAME, contentValues, "id = ? ", new String[] { Integer.toString(id) } );
         return true;
     }

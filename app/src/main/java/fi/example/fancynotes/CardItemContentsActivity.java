@@ -17,6 +17,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
     private ImageView img;
     DatabaseHelper mDatabaseHelper;
     int id;
+    int orderId;
     String title;
     String description;
 
@@ -36,6 +37,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
         description = intent.getExtras().getString("fi.example.fancynotes.note");
         Uri image = Uri.parse(getIntent().getExtras().getString("fi.example.fancynotes.thumbnail"));
         id = intent.getExtras().getInt("fi.example.fancynotes.id");
+        orderId =  intent.getExtras().getInt("fi.example.fancynotes.orderid");
         title = intent.getExtras().getString("fi.example.fancynotes.title");
         tvDesc.setText(description);
         img.setImageURI(image);
@@ -46,6 +48,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
         newIntent.putExtra("fi.example.fancynotes.note", description);
         newIntent.putExtra("fi.example.fancynotes.thumbnail", title);
         newIntent.putExtra("fi.example.fancynotes.id", id);
+        newIntent.putExtra("fi.example.fancynotes.orderid", orderId);
         newIntent.putExtra("fi.example.fancynotes.title", title);
         startActivity(newIntent);
     }

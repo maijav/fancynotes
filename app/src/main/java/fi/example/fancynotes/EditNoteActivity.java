@@ -61,10 +61,10 @@ public class EditNoteActivity extends AppCompatActivity {
 
     public void updateNote(View v) {
         Log.d("UpdateNoteActivityAdd","works");
-        String newEntryNote = editTextNote.getText().toString();
-        String newEntryTitle = editTextTitle.getText().toString();
+        String updateEntryNote = editTextNote.getText().toString();
+        String updateEntryTitle = editTextTitle.getText().toString();
         if(editTextNote.length() != 0) {
-            updateNote(id, newEntryTitle,newEntryNote);
+            updateNote(id, updateEntryTitle, updateEntryNote);
         } else {
             toastMessage("You must put something in the note field.");
         }
