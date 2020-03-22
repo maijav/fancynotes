@@ -21,6 +21,7 @@
         <activity android:name=".NewNoteActivity"/>
         <activity android:name=".CardViewActivity"/>
         <activity android:name=".CardItemContentsActivity"/>
+        <activity android:name=".EditNoteActivity"/>
         <service android:name=".MyService"/>
     </application>
 

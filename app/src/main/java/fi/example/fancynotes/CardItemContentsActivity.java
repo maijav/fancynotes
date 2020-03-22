@@ -17,6 +17,9 @@ public class CardItemContentsActivity extends AppCompatActivity {
     private ImageView img;
     DatabaseHelper mDatabaseHelper;
     int id;
+    String title;
+    String description;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,16 +33,21 @@ public class CardItemContentsActivity extends AppCompatActivity {
         Log.d("PAPA","HI");
 
         Intent intent = getIntent();
-        String description = intent.getExtras().getString("fi.example.fancynotes.note");
+        description = intent.getExtras().getString("fi.example.fancynotes.note");
         Uri image = Uri.parse(getIntent().getExtras().getString("fi.example.fancynotes.thumbnail"));
-        id =  intent.getExtras().getInt("fi.example.fancynotes.id");
-
+        id = intent.getExtras().getInt("fi.example.fancynotes.id");
+        title = intent.getExtras().getString("fi.example.fancynotes.title");
         tvDesc.setText(description);
         img.setImageURI(image);
     }
 
     public void editNote(View view) {
-
+        Intent newIntent = new Intent(this, EditNoteActivity.class);
+        newIntent.putExtra("fi.example.fancynotes.note", description);
+        newIntent.putExtra("fi.example.fancynotes.thumbnail", title);
+        newIntent.putExtra("fi.example.fancynotes.id", id);
+        newIntent.putExtra("fi.example.fancynotes.title", title);
+        startActivity(newIntent);
     }
 
     public void deleteNote(View view) {
