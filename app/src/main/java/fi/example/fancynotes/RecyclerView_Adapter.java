@@ -52,6 +52,7 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adap
                 Intent newIntent = new Intent(mContext, CardItemContentsActivity.class);
                 newIntent.putExtra("fi.example.fancynotes.note", mData.get(position).getNote());
                 newIntent.putExtra("fi.example.fancynotes.thumbnail", mData.get(position).getTitle());
+                newIntent.putExtra("fi.example.fancynotes.id", mData.get(position).getId());
                 mContext.startActivity(newIntent);
 
             }
