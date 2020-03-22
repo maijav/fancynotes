@@ -44,6 +44,7 @@ public class CardViewActivity extends AppCompatActivity{
             String text = data.getString(3);
             String backGround = data.getString(4);
             Log.d("noteDATA", id + title + text);
+            Log.d("ORDERID", orderId + " from cardview");
 
 //            Log.d("noteDATA", id + title + text);
             noteList.add(new Note(id, orderId, title, text, backGround));
@@ -70,11 +71,11 @@ public class CardViewActivity extends AppCompatActivity{
                 ItemTouchHelper.UP | ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT, 0 ) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder dragged, @NonNull RecyclerView.ViewHolder target) {
-                item1Id = noteList.get(dragged.getAdapterPosition()).getId();
-                item2Id = noteList.get(target.getAdapterPosition()).getId();
-                mDatabaseHelper.updateId(item1Id, 1000);
-                mDatabaseHelper.updateId(item2Id, item1Id);
-                mDatabaseHelper.updateId(1000, item2Id);
+                item1Id = noteList.get(dragged.getAdapterPosition()).getOrderId();
+                item2Id = noteList.get(target.getAdapterPosition()).getOrderId();
+                mDatabaseHelper.updateOrderId(item1Id, 1000);
+                mDatabaseHelper.updateOrderId(item2Id, item1Id);
+                mDatabaseHelper.updateOrderId(1000, item2Id);
                 moveItem(dragged.getAdapterPosition(), target.getAdapterPosition());
                 return true;
             }

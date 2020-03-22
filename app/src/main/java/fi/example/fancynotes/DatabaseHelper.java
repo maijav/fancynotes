@@ -63,23 +63,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public boolean updateId (Integer oldId, Integer newId) {
+    public boolean updateOrderId (Integer oldOrderId, Integer newOrderId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query ="UPDATE " +  TABLE_NAME + " SET " + COL0 + " = " + newId + " WHERE " + COL0 + " = " + oldId;
-        db.rawQuery(query, null);
-        Cursor data = getAllData();
-        while(data.moveToNext()){
-            int id = data.getInt(0);
-            String title = data.getString(1);
-            String text = data.getString(2);
-            Log.d("noteDATA", id + title + text);
-        }
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COL1, newOrderId);
+        db.update(TABLE_NAME, contentValues, "orderId = ? ", new String[] { Integer.toString(oldOrderId) } );
+
+//        String query ="UPDATE " +  TABLE_NAME + " SET " + COL1 + " = " + newOrderId + " WHERE " + COL1 + " = " + oldOrderId;
+//        db.rawQuery(query, null);
+//        Cursor data = getAllData();
+//        while(data.moveToNext()){
+//            int orderId = data.getInt(1);
+//            String title = data.getString(1);
+//            String text = data.getString(2);
+//            Log.d("noteDATA", orderId + title + text);
+//        }
         return true;
     }
 
     public Cursor getAllData() {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_NAME;
+        String query = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + COL1 + " DESC";
         Cursor data = db.rawQuery(query,null);
         return data;
     }
@@ -87,6 +91,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getDataById(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from "+ TABLE_NAME +" where id="+id+"", null );
+        return res;
+    }
+
+    public Cursor getLatestInOrder() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select * from " + TABLE_NAME + " WHERE " + COL1 + " = (SELECT MAX(" + COL1 +") from " + TABLE_NAME + ") order by " + COL1 + " ASC LIMIT 1" , null );
         return res;
     }
 
@@ -109,7 +119,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         res.moveToFirst();
 
         while(res.isAfterLast() == false){
-            listData.add(res.getString(res.getColumnIndex(COL1)));
+            listData.add(res.getString(res.getColumnIndex(COL2)));
             res.moveToNext();
         }
         return listData;

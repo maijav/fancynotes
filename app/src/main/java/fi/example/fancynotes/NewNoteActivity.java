@@ -1,6 +1,7 @@
 package fi.example.fancynotes;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,7 +18,7 @@ public class NewNoteActivity extends AppCompatActivity {
     private EditText editTextTitle;
     private String noteBackground;
 
-    static int orderId = 1;
+    static int orderId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +34,27 @@ public class NewNoteActivity extends AppCompatActivity {
 
 
     public void addNote(String newEntryTitle, String newEntryNote) {
+        Cursor data = mDatabaseHelper.getLatestInOrder();
+        int orderIdFromData = 0;
+        while(data.moveToNext()){
+            orderIdFromData = data.getInt(1);
+            Log.d("ORDERID", orderIdFromData + " DATANEXT");
+        }
+
+        orderId = orderIdFromData;
+        Log.d("ORDERID", orderId + " found from db");
+        if(orderId == 0) {
+            orderId = 1;
+            Log.d("ORDERID", orderId + " new one first note");
+        } else {
+            orderId++;
+            Log.d("ORDERID", orderId + " new one not first note");
+        }
+
         boolean insertData = mDatabaseHelper.addData(orderId,newEntryTitle, newEntryNote, noteBackground);
 
         if(insertData) {
             toastMessage("Data successfully Inserted");
-            orderId++;
             Intent i = new Intent(this, CardViewActivity.class);
             startActivity(i);
         } else {
