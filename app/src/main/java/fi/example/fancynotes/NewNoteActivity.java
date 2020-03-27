@@ -1,9 +1,14 @@
 package fi.example.fancynotes;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Layout;
 import android.util.Log;
 import android.view.View;
@@ -13,8 +18,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 public class NewNoteActivity extends AppCompatActivity {
     DatabaseHelper mDatabaseHelper;
@@ -29,6 +39,11 @@ public class NewNoteActivity extends AppCompatActivity {
     private LinearLayout addImgLayout;
 
     static int orderId;
+    Button stopRecord, startRecord;
+    String outputFileForAudio;
+    private MediaRecorder myAudioRecorder;
+    public static final int RECORD_AUDIO = 1000;
+    boolean hasRecorded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +53,17 @@ public class NewNoteActivity extends AppCompatActivity {
         editTextNote = (EditText) findViewById(R.id.newNoteEditText);
         editTextTitle = (EditText) findViewById(R.id.newTitleEditText);
         addImgLayout = (LinearLayout) findViewById(R.id.addImgLayout);
+
+        stopRecord = (Button) findViewById(R.id.stopRecord);
+        startRecord = (Button) findViewById(R.id.startRecord);
+
+        startRecord.setEnabled(true);
+        stopRecord.setEnabled(false);
+
+        if(!checkPermissionFromDevice()) {
+            requestPermission();
+        }
+
         mDatabaseHelper = new DatabaseHelper(this);
         noteBackground = "note_placeholder";
         imageUri = null;
@@ -53,6 +79,68 @@ public class NewNoteActivity extends AppCompatActivity {
         });
 
         addImgLayout.addView(addImgBtn);
+    }
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                RECORD_AUDIO);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case RECORD_AUDIO: {
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this,"Permission granted",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this,"Permission denied",Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    private boolean checkPermissionFromDevice() {
+        int write_external_storage_result = ActivityCompat.checkSelfPermission(getApplication(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int record_audio_result = ActivityCompat.checkSelfPermission(getApplication(), Manifest.permission.RECORD_AUDIO);
+        return write_external_storage_result == PackageManager.PERMISSION_GRANTED && record_audio_result == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void setupMediaRecorder() {
+        myAudioRecorder = new MediaRecorder();
+        myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        myAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+        myAudioRecorder.setOutputFile(outputFileForAudio);
+    }
+
+    public void stopRecord(View v) {
+        myAudioRecorder.stop();
+        addBtn.setEnabled(true);
+        stopRecord.setEnabled(false);
+        startRecord.setEnabled(true);
+        Toast.makeText(getApplicationContext(), "Audio Recorder stopped", Toast.LENGTH_LONG).show();
+        hasRecorded = true;
+    }
+
+    public void startRecord(View v) {
+        addBtn.setEnabled(false);
+        if(checkPermissionFromDevice()) {
+            outputFileForAudio = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + UUID.randomUUID().toString() + "_audio_recording.3gp";
+            setupMediaRecorder();
+            try {
+                myAudioRecorder.prepare();
+                myAudioRecorder.start();
+
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+
+            startRecord.setEnabled(false);
+            stopRecord.setEnabled(true);
+            Toast.makeText(getApplicationContext(), "Recording started", Toast.LENGTH_LONG).show();
+        } else {
+            requestPermission();
+        }
+
     }
 
 
@@ -78,7 +166,11 @@ public class NewNoteActivity extends AppCompatActivity {
             imageUri = pickedImgUri.toString();
         }
 
-        boolean insertData = mDatabaseHelper.addData(orderId,newEntryTitle, newEntryNote, noteBackground, imageUri);
+        if(outputFileForAudio == null) {
+            outputFileForAudio = "No Audio";
+        }
+
+        boolean insertData = mDatabaseHelper.addData(orderId,newEntryTitle, newEntryNote, noteBackground, imageUri, outputFileForAudio);
 
         if(insertData) {
             toastMessage("Data successfully Inserted");
@@ -144,5 +236,19 @@ public class NewNoteActivity extends AppCompatActivity {
             usersPhoto.setLayoutParams(params);
 
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(hasRecorded) {
+            myAudioRecorder.stop();
+            File file = new File(outputFileForAudio);
+            boolean deleted = file.delete();
+            Log.d("AUDIODELETED", deleted + " audio deleted");
+        }
+
+        Intent i= new Intent(NewNoteActivity.this,MainActivity.class);
+        startActivity(i);
+        finish();
     }
 }

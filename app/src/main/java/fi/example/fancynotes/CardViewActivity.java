@@ -56,11 +56,12 @@ public class CardViewActivity extends AppCompatActivity{
             String text = data.getString(3);
             String backGround = data.getString(4);
             String imageUri = data.getString(5);
+            String voiceUri = data.getString(6);
             Log.d("noteDATA", id + title + text);
             Log.d("ORDERID", orderId + " from cardview");
 
 //            Log.d("noteDATA", id + title + text);
-            noteList.add(new Note(id, orderId, title, text, backGround, imageUri));
+            noteList.add(new Note(id, orderId, title, text, backGround, imageUri, voiceUri));
         }
 //
 //
@@ -107,5 +108,12 @@ public class CardViewActivity extends AppCompatActivity{
             }
         });
         moveItemHelper.attachToRecyclerView(myRv);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i= new Intent(CardViewActivity.this,MainActivity.class);
+        startActivity(i);
+        finish();
     }
 }

@@ -28,41 +28,6 @@
         android:onClick="onClick"
         android:text="fetching"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Start record"
-        android:textSize="20sp"
-        android:id="@+id/startRecord"
-        android:onClick="startRecord"
-        />
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Stop record"
-        android:textSize="20sp"
-        android:id="@+id/stopRecord"
-        android:onClick="stopRecord"
-        />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Stop"
-        android:textSize="20sp"
-        android:id="@+id/stopAudio"
-        android:onClick="stopAudio"
-        />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Play"
-        android:textSize="20sp"
-        android:id="@+id/startAudio"
-        android:onClick="startAudio"
-        />
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

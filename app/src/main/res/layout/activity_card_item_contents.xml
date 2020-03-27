@@ -25,6 +25,24 @@
                 android:id="@+id/itemthumbnail"
                 android:scaleType="centerCrop"/>
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Play Audio"
+                android:textSize="20sp"
+                android:id="@+id/startAudio"
+                android:onClick="startAudio"
+                />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Stop Audio"
+                android:textSize="20sp"
+                android:id="@+id/stopAudio"
+                android:onClick="stopAudio"
+                />
+
             <TextView
                 android:id="@+id/txtdesc"
                 android:textSize="18dp"

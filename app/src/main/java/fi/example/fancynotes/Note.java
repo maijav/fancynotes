@@ -9,10 +9,20 @@ public class Note {
     private String title;
     private String note;
     private String imageUri;
+    private String voiceUri;
     int orderId;
     private String noteBackground;
 
     public Note() {
+    }
+    public Note(int id, int orderId, String title, String note, String noteBackground, String imageUri, String voiceUri) {
+        this.id = id;
+        this.orderId = orderId;
+        this.title = title;
+        this.note = note;
+        this.noteBackground = noteBackground;
+        this.imageUri = imageUri;
+        this.voiceUri = voiceUri;
     }
 
     public int getOrderId() {
@@ -23,13 +33,12 @@ public class Note {
         this.orderId = orderId;
     }
 
-    public Note(int id, int orderId, String title, String note, String noteBackground, String imageUri) {
-        this.id = id;
-        this.orderId = orderId;
-        this.title = title;
-        this.note = note;
-        this.noteBackground = noteBackground;
-        this.imageUri = imageUri;
+    public String getVoiceUri() {
+        return voiceUri;
+    }
+
+    public void setVoiceUri(String voiceUri) {
+        this.voiceUri = voiceUri;
     }
 
     public int getId() {
