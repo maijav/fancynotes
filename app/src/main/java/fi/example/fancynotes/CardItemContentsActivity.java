@@ -35,12 +35,16 @@ public class CardItemContentsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         description = intent.getExtras().getString("fi.example.fancynotes.note");
-        Uri image = Uri.parse(getIntent().getExtras().getString("fi.example.fancynotes.thumbnail"));
+        String imgString = getIntent().getExtras().getString("fi.example.fancynotes.imageUri");
+        if(imgString != null){
+            Uri image = Uri.parse(imgString);
+            img.setImageURI(image);
+        }
         id = intent.getExtras().getInt("fi.example.fancynotes.id");
         orderId =  intent.getExtras().getInt("fi.example.fancynotes.orderid");
         title = intent.getExtras().getString("fi.example.fancynotes.title");
         tvDesc.setText(description);
-        img.setImageURI(image);
+
     }
 
     public void editNote(View view) {

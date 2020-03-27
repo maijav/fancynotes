@@ -22,6 +22,7 @@ public class NewNoteActivity extends AppCompatActivity {
     private EditText editTextNote;
     private EditText editTextTitle;
     private String noteBackground;
+    private String imageUri;
     static int RequestCode = 1;
     static Uri pickedImgUri;
     private Button addImgBtn;
@@ -39,6 +40,7 @@ public class NewNoteActivity extends AppCompatActivity {
         addImgLayout = (LinearLayout) findViewById(R.id.addImgLayout);
         mDatabaseHelper = new DatabaseHelper(this);
         noteBackground = "note_placeholder";
+        imageUri = null;
 
         addImgBtn = new Button(this);
         addImgBtn.setText("add image");
@@ -72,7 +74,11 @@ public class NewNoteActivity extends AppCompatActivity {
             Log.d("ORDERID", orderId + " new one not first note");
         }
 
-        boolean insertData = mDatabaseHelper.addData(orderId,newEntryTitle, newEntryNote, noteBackground);
+        if(pickedImgUri != null){
+            imageUri = pickedImgUri.toString();
+        }
+
+        boolean insertData = mDatabaseHelper.addData(orderId,newEntryTitle, newEntryNote, noteBackground, imageUri);
 
         if(insertData) {
             toastMessage("Data successfully Inserted");

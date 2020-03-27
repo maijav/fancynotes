@@ -1,9 +1,14 @@
 package fi.example.fancynotes;
 
+import android.os.Build;
+
+import java.util.Optional;
+
 public class Note {
     int id;
     private String title;
     private String note;
+    private String imageUri;
     int orderId;
     private String noteBackground;
 
@@ -18,12 +23,13 @@ public class Note {
         this.orderId = orderId;
     }
 
-    public Note(int id, int orderId, String title, String note, String noteBackground) {
+    public Note(int id, int orderId, String title, String note, String noteBackground, String imageUri) {
         this.id = id;
         this.orderId = orderId;
         this.title = title;
         this.note = note;
         this.noteBackground = noteBackground;
+        this.imageUri = imageUri;
     }
 
     public int getId() {
@@ -56,5 +62,13 @@ public class Note {
 
     public void setNoteBackground(String noteBackground) {
         this.noteBackground = noteBackground;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
+
+    public String getImageUri() {
+        return imageUri;
     }
 }

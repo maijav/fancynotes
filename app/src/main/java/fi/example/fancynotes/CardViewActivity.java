@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class CardViewActivity extends AppCompatActivity{
 
@@ -54,11 +55,12 @@ public class CardViewActivity extends AppCompatActivity{
             String title = data.getString(2);
             String text = data.getString(3);
             String backGround = data.getString(4);
+            String imageUri = data.getString(5);
             Log.d("noteDATA", id + title + text);
             Log.d("ORDERID", orderId + " from cardview");
 
 //            Log.d("noteDATA", id + title + text);
-            noteList.add(new Note(id, orderId, title, text, backGround));
+            noteList.add(new Note(id, orderId, title, text, backGround, imageUri));
         }
 //
 //

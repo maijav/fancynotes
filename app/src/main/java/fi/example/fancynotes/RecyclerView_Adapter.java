@@ -57,6 +57,7 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adap
                 newIntent.putExtra("fi.example.fancynotes.orderid", mData.get(position).getOrderId());
                 newIntent.putExtra("fi.example.fancynotes.id", mData.get(position).getId());
                 newIntent.putExtra("fi.example.fancynotes.title", mData.get(position).getTitle());
+                newIntent.putExtra("fi.example.fancynotes.imageUri", mData.get(position).getImageUri());
                 mContext.startActivity(newIntent);
 
             }
