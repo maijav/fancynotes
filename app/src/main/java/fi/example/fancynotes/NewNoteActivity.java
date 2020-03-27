@@ -1,14 +1,19 @@
 package fi.example.fancynotes;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class NewNoteActivity extends AppCompatActivity {
@@ -17,6 +22,10 @@ public class NewNoteActivity extends AppCompatActivity {
     private EditText editTextNote;
     private EditText editTextTitle;
     private String noteBackground;
+    static int RequestCode = 1;
+    static Uri pickedImgUri;
+    private Button addImgBtn;
+    private LinearLayout addImgLayout;
 
     static int orderId;
 
@@ -27,9 +36,21 @@ public class NewNoteActivity extends AppCompatActivity {
         addBtn = (Button) findViewById(R.id.addButton);
         editTextNote = (EditText) findViewById(R.id.newNoteEditText);
         editTextTitle = (EditText) findViewById(R.id.newTitleEditText);
+        addImgLayout = (LinearLayout) findViewById(R.id.addImgLayout);
         mDatabaseHelper = new DatabaseHelper(this);
         noteBackground = "note_placeholder";
 
+        addImgBtn = new Button(this);
+        addImgBtn.setText("add image");
+
+        addImgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openGallery();
+            }
+        });
+
+        addImgLayout.addView(addImgBtn);
     }
 
 
@@ -87,6 +108,35 @@ public class NewNoteActivity extends AppCompatActivity {
                 break;
             default:
             throw new RuntimeException("Unknow button ID");
+        }
+    }
+
+    private void openGallery() {
+
+        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        galleryIntent.setType("Image/*");
+        startActivityForResult(galleryIntent, RequestCode);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && requestCode == RequestCode && data != null){
+            //the user has picked a suitable image
+            //reference to image is saved to a Uri variable
+
+            ImageView usersPhoto = new ImageView(this);
+
+            pickedImgUri = data.getData();
+            usersPhoto.setImageURI(pickedImgUri);
+
+            addImgLayout.removeView(addImgBtn);
+            addImgLayout.addView(usersPhoto);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(500,500);
+            usersPhoto.setLayoutParams(params);
+
         }
     }
 }
