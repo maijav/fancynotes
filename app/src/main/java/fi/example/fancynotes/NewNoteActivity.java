@@ -1,14 +1,20 @@
 package fi.example.fancynotes;
 
 import android.Manifest;
+import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Layout;
 import android.util.Log;
 import android.view.View;
@@ -20,24 +26,32 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 
-public class NewNoteActivity extends AppCompatActivity {
+public class NewNoteActivity extends AppCompatActivity implements CameraDialog_Fragment.NoticeDialogListener {
     DatabaseHelper mDatabaseHelper;
     private Button addBtn;
     private EditText editTextNote;
     private EditText editTextTitle;
     private String noteBackground;
     private String imageUri;
-    static int RequestCode = 1;
+    String currentPhotoPath;
+    static final int ImageRequestCode = 1;
+    static final int ImageCaptureRequestCode = 1;
     static Uri pickedImgUri;
     private Button addImgBtn;
     private LinearLayout addImgLayout;
+    private ImageView usersPhoto;
 
     static int orderId;
     Button stopRecord, startRecord;
@@ -68,6 +82,7 @@ public class NewNoteActivity extends AppCompatActivity {
         mDatabaseHelper = new DatabaseHelper(this);
         noteBackground = "note_placeholder";
         imageUri = null;
+        usersPhoto = new ImageView(this);
 
         addImgBtn = new Button(this);
         addImgBtn.setText("add image");
@@ -76,7 +91,6 @@ public class NewNoteActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 showCameraDialog();
-                openGallery();
             }
         });
 
@@ -86,6 +100,22 @@ public class NewNoteActivity extends AppCompatActivity {
     public void showCameraDialog() {
         DialogFragment dialog = new CameraDialog_Fragment();
         dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
+    }
+
+    //Get input for camera dialog
+    @Override
+    public void sendChoice(String input) {
+        if(input.equals("Phone gallery")){
+            openGallery();
+        }else{
+            PackageManager pm = this.getPackageManager();
+            final boolean deviceHasCameraFlag = pm.hasSystemFeature((PackageManager.FEATURE_CAMERA_ANY));
+            if( !deviceHasCameraFlag) {
+                toastMessage("Device has no camera");
+            }else{
+                openCamera();
+            }
+        }
     }
 
     private void requestPermission() {
@@ -217,11 +247,37 @@ public class NewNoteActivity extends AppCompatActivity {
         }
     }
 
+    //User can choose image from phone gallery
     private void openGallery() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), RequestCode);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), ImageRequestCode);
+    }
+
+    //User can take images with phone camera
+    public void openCamera(){
+
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+
+                pickedImgUri = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider",
+                        photoFile);
+
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, pickedImgUri);
+                startActivityForResult(takePictureIntent, ImageCaptureRequestCode);
+            }
+        }
     }
 
     //After user has chosen image from gallery
@@ -229,23 +285,23 @@ public class NewNoteActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK && requestCode == RequestCode && data != null){
-            //the user has picked a suitable image
+        if (resultCode == RESULT_OK && requestCode == ImageRequestCode && data != null){
+            //the user has picked an image from phone gallery
             //reference to image is saved to a Uri variable
-
-            ImageView usersPhoto = new ImageView(this);
-
             pickedImgUri = data.getData();
+            Log.d("KAMERA", pickedImgUri.toString());
             usersPhoto.setImageURI(pickedImgUri);
-
-            addImgLayout.removeView(addImgBtn);
-            addImgLayout.addView(usersPhoto);
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(500,500);
-            usersPhoto.setLayoutParams(params);
-
+        }else if (requestCode == ImageCaptureRequestCode && resultCode == RESULT_OK) {
+            usersPhoto.setImageURI(pickedImgUri);
         }
+        addImgLayout.removeView(addImgBtn);
+        addImgLayout.addView(usersPhoto);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(500,500);
+        usersPhoto.setLayoutParams(params);
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -260,4 +316,21 @@ public class NewNoteActivity extends AppCompatActivity {
         startActivity(i);
         finish();
     }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
 }
