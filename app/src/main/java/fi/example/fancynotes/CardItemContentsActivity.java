@@ -26,6 +26,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
     int orderId;
     String title;
     String description;
+    private Intent intent;
 
     Button startAudio, stopAudio;
     String outputFileForAudio;
@@ -46,13 +47,8 @@ public class CardItemContentsActivity extends AppCompatActivity {
         //Receiving data
         Log.d("PAPA","HI");
 
-        Intent intent = getIntent();
+        intent = getIntent();
         description = intent.getExtras().getString("fi.example.fancynotes.note");
-        String imgString = getIntent().getExtras().getString("fi.example.fancynotes.imageUri");
-        if(imgString != null){
-            Uri image = Uri.parse(imgString);
-            img.setImageURI(image);
-        }
         id = intent.getExtras().getInt("fi.example.fancynotes.id");
         orderId =  intent.getExtras().getInt("fi.example.fancynotes.orderid");
         title = intent.getExtras().getString("fi.example.fancynotes.title");
@@ -99,6 +95,17 @@ public class CardItemContentsActivity extends AppCompatActivity {
         if(mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        String imgString = getIntent().getExtras().getString("fi.example.fancynotes.imageUri");
+        if(imgString != null){
+            Uri image = Uri.parse(imgString);
+            img.setImageURI(image);
         }
     }
 

@@ -25,6 +25,7 @@ import java.util.UUID;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.DialogFragment;
 
 public class NewNoteActivity extends AppCompatActivity {
     DatabaseHelper mDatabaseHelper;
@@ -74,12 +75,19 @@ public class NewNoteActivity extends AppCompatActivity {
         addImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                showCameraDialog();
                 openGallery();
             }
         });
 
         addImgLayout.addView(addImgBtn);
     }
+
+    public void showCameraDialog() {
+        DialogFragment dialog = new CameraDialog_Fragment();
+        dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
+    }
+
     private void requestPermission() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 RECORD_AUDIO);
@@ -210,12 +218,13 @@ public class NewNoteActivity extends AppCompatActivity {
     }
 
     private void openGallery() {
-
-        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        galleryIntent.setType("Image/*");
-        startActivityForResult(galleryIntent, RequestCode);
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), RequestCode);
     }
 
+    //After user has chosen image from gallery
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

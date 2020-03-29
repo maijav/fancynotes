@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">FancyNotes</string>
+
+    <string name="dialog_message">Pick the image from: </string>
+    <string name="dialog_title">Test</string>
+
+    <string-array name="Choice">
+        <item>Phone gallery</item>
+        <item>Open camera</item>
+    </string-array>
 </resources>
