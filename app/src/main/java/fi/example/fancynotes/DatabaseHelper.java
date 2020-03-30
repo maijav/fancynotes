@@ -27,6 +27,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COL5 = "imgUri";
     //Column 6
     private static final String COL6 = "audioUri";
+    //Column 6
+    private static final String COL7 = "tags";
 
     public DatabaseHelper(Context context) {
         super(context,TABLE_NAME,null,1 );
@@ -34,7 +36,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-            String createTable = "CREATE TABLE " + TABLE_NAME + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COL1 + " TEXT, " + COL2 + " TEXT," + COL3 + " TEXT," + COL4 + " TEXT," + COL5 + " TEXT," + COL6 + " TEXT)";
+            String createTable = "CREATE TABLE " + TABLE_NAME + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COL1 + " TEXT, " + COL2 + " TEXT," + COL3 + " TEXT," + COL4 + " TEXT," + COL5 + " TEXT," + COL6 + " TEXT," + COL7 + " TEXT)";
             db.execSQL(createTable);
     }
 
@@ -43,7 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
     }
 
-    public boolean addData(int orderId, String title, String note, String background, String imageUri, String audioUri) {
+    public boolean addData(int orderId, String title, String note, String background, String imageUri, String audioUri, String tags) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL1, orderId);
@@ -52,6 +54,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL4, background);
         contentValues.put(COL5, imageUri);
         contentValues.put(COL6, audioUri);
+        contentValues.put(COL7, tags);
 
         Log.d(TAG, "addData: Adding" + orderId + " to " + TABLE_NAME);
         Log.d(TAG, "addData: Adding" + title + " to " + TABLE_NAME);

@@ -12,10 +12,12 @@ public class Note {
     private String voiceUri;
     int orderId;
     private String noteBackground;
+    private String tags;
 
     public Note() {
     }
-    public Note(int id, int orderId, String title, String note, String noteBackground, String imageUri, String voiceUri) {
+
+    public Note(int id, int orderId, String title, String note, String noteBackground, String imageUri, String voiceUri, String tags) {
         this.id = id;
         this.orderId = orderId;
         this.title = title;
@@ -23,6 +25,15 @@ public class Note {
         this.noteBackground = noteBackground;
         this.imageUri = imageUri;
         this.voiceUri = voiceUri;
+        this.tags = tags;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 
     public int getOrderId() {

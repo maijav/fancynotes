@@ -51,6 +51,20 @@
                 android:layout_height="wrap_content"
                 android:text="Description"/>
 
+            <TextView
+                android:textSize="18dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tags: "/>
+
+            <TextView
+                android:id="@+id/tagsToDisplay"
+                android:textSize="18dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -66,6 +80,7 @@
                 android:onClick="deleteNote"/>
 
         </LinearLayout>
+
 
     </androidx.core.widget.NestedScrollView>
 

@@ -57,11 +57,12 @@ public class CardViewActivity extends AppCompatActivity{
             String backGround = data.getString(4);
             String imageUri = data.getString(5);
             String voiceUri = data.getString(6);
+            String tags = data.getString(7);
             Log.d("noteDATA", id + title + text);
             Log.d("ORDERID", orderId + " from cardview");
 
 //            Log.d("noteDATA", id + title + text);
-            noteList.add(new Note(id, orderId, title, text, backGround, imageUri, voiceUri));
+            noteList.add(new Note(id, orderId, title, text, backGround, imageUri, voiceUri,tags));
         }
 //
 //

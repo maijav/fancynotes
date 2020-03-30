@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class CardItemContentsActivity extends AppCompatActivity {
 
     private TextView tvDesc;
+    private TextView tagsToDisplay;
     private ImageView img;
     DatabaseHelper mDatabaseHelper;
     int id;
@@ -27,6 +28,8 @@ public class CardItemContentsActivity extends AppCompatActivity {
     String title;
     String description;
     private Intent intent;
+
+    String tags ="";
 
     Button startAudio, stopAudio;
     String outputFileForAudio;
@@ -41,6 +44,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
         mDatabaseHelper = new DatabaseHelper(this);
         tvDesc = (TextView) findViewById(R.id.txtdesc);
         img = (ImageView) findViewById(R.id.itemthumbnail);
+        tagsToDisplay = findViewById(R.id.tagsToDisplay);
         stopAudio = (Button) findViewById(R.id.stopAudio);
         startAudio = (Button) findViewById(R.id.startAudio);
         stopAudio.setEnabled(false);
@@ -53,6 +57,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
         orderId =  intent.getExtras().getInt("fi.example.fancynotes.orderid");
         title = intent.getExtras().getString("fi.example.fancynotes.title");
         outputFileForAudio = intent.getExtras().getString("fi.example.fancynotes.voiceUri");
+        tags = intent.getExtras().getString("fi.example.fancynotes.tags");
         Log.d("AUDIONULL", outputFileForAudio);
 
         if(outputFileForAudio.equals("No Audio")) {
@@ -63,6 +68,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
         }
 
         tvDesc.setText(description);
+        tagsToDisplay.setText(tags);
     }
 
     public void startAudio(View v) {
@@ -116,6 +122,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
         newIntent.putExtra("fi.example.fancynotes.id", id);
         newIntent.putExtra("fi.example.fancynotes.orderid", orderId);
         newIntent.putExtra("fi.example.fancynotes.title", title);
+        newIntent.putExtra("fi.example.fancynotes.tags", tags);
         startActivity(newIntent);
     }
 

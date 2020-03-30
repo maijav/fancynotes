@@ -73,6 +73,7 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
     boolean[] checkedTags;
     ArrayList<Integer> mSelectedTags = new ArrayList<>();
     SharedPreferences sharedPreferences;
+    String tagsToBeAdded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,15 +157,15 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
-                String item = "";
+                tagsToBeAdded = "";
                 for(int i = 0; i < mSelectedTags.size(); i++) {
-                    item = item + tagsArray[mSelectedTags.get(i)];
+                    tagsToBeAdded = tagsToBeAdded + tagsArray[mSelectedTags.get(i)];
                     if(i != mSelectedTags.size() - 1) {
-                        item +=",";
+                        tagsToBeAdded +=",";
 
                     }
                 }
-                chosenTags.setText(item);
+                chosenTags.setText(tagsToBeAdded);
             }
         });
 
@@ -362,7 +363,7 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
             outputFileForAudio = "No Audio";
         }
 
-        boolean insertData = mDatabaseHelper.addData(orderId,newEntryTitle, newEntryNote, noteBackground, imageUri, outputFileForAudio);
+        boolean insertData = mDatabaseHelper.addData(orderId,newEntryTitle, newEntryNote, noteBackground, imageUri, outputFileForAudio, tagsToBeAdded);
 
         if(insertData) {
             toastMessage("Data successfully Inserted");
