@@ -27,6 +27,19 @@
         />
 
     <Button
+        android:id="@+id/tagsEditButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Edit Tags"
+        android:onClick="chooseNewTags"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/chosenNewTags"
+        android:gravity="center"/>
+
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/addButton"

@@ -124,11 +124,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return listData;
     }
 
-    public boolean updateNote (Integer id, String title, String note) {
+    public boolean updateNote (Integer id, String title, String note, String tags) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL2, title);
         contentValues.put(COL3, note);
+        contentValues.put(COL7, tags);
         db.update(TABLE_NAME, contentValues, "id = ? ", new String[] { Integer.toString(id) } );
         return true;
     }
