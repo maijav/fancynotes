@@ -31,12 +31,8 @@ public class EditNoteActivity extends AppCompatActivity {
 
     Button tagsEditButton;
     TextView chosenNewTags;
-    String[] tagsArray;
-    boolean[] checkedTags;
-    ArrayList<Integer> mSelectedTags = new ArrayList<>();
     SharedPreferences sharedPreferences;
-    String tagsToBeAdded;
-
+    TagsDialog tagsDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +46,6 @@ public class EditNoteActivity extends AppCompatActivity {
         tagsEditButton = findViewById(R.id.tagsEditButton);
         chosenNewTags = findViewById(R.id.chosenNewTags);
         sharedPreferences = getSharedPreferences("tags", MODE_PRIVATE);
-        addTags();
 
 
         Intent intent = getIntent();
@@ -59,11 +54,14 @@ public class EditNoteActivity extends AppCompatActivity {
         id = intent.getExtras().getInt("fi.example.fancynotes.id");
         title = intent.getExtras().getString("fi.example.fancynotes.title");
         tags = intent.getExtras().getString("fi.example.fancynotes.tags");
-        updateTagsOnLoad(tags);
 
         editTextNote.setText(description);
         editTextTitle.setText(title);
+
+        tagsDialog = new TagsDialog(this);
+        tagsDialog.updateTagsOnLoad(tags);
         chosenNewTags.setText(tags);
+
     }
 
 
@@ -95,147 +93,8 @@ public class EditNoteActivity extends AppCompatActivity {
         }
     }
 
-    public void addTags() {
-        int tagsArrayLength;
-        try{
-            tagsArrayLength = Integer.parseInt(getTagsPrefs("tagArray-length"));
-        }catch (NumberFormatException e) {
-            tagsArrayLength = 0;
-        }
-
-        tagsArray = new String[tagsArrayLength];
-        for(int i = 0; i < tagsArray.length; i++) {
-            tagsArray[i] = getTagsPrefs("tag"+i);
-        }
-        checkedTags = new boolean[tagsArray.length];
-
-    }
-
-    public void updateTagsOnLoad(String tags) {
-        int i = 0;
-        for(String sTag: tagsArray) {
-            if(tags.contains(sTag)) {
-                checkedTags[i] = true;
-                mSelectedTags.add(i);
-            }
-            i++;
-        }
-    }
-
     public void chooseNewTags(View v) {
-
-        AlertDialog.Builder mBuilder = new AlertDialog.Builder(EditNoteActivity.this);
-        mBuilder.setTitle("Tags available to choose from");
-        if(tagsArray.length > 0) {
-            mBuilder.setMultiChoiceItems(tagsArray, checkedTags, new DialogInterface.OnMultiChoiceClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
-                    if(isChecked) {
-                        mSelectedTags.add(position);
-                    } else {
-                        mSelectedTags.remove((Integer.valueOf(position)));
-                    }
-                }
-            });
-        }
-
-        mBuilder.setCancelable(false);
-        mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int which) {
-                tagsToBeAdded = "";
-                for(int i = 0; i < mSelectedTags.size(); i++) {
-                    tagsToBeAdded = tagsToBeAdded + tagsArray[mSelectedTags.get(i)];
-                    if(i != mSelectedTags.size() - 1) {
-                        tagsToBeAdded +=",";
-
-                    }
-                }
-                chosenNewTags.setText(tagsToBeAdded);
-            }
-        });
-
-        mBuilder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-
-        mBuilder.setNeutralButton("Clear all", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int which) {
-                for(int i = 0; i < checkedTags.length; i++) {
-                    checkedTags[i] = false;
-                    mSelectedTags.clear();
-                    chosenNewTags.setText("");
-                }
-            }
-        });
-
-        mBuilder.setNeutralButton("+", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int which) {
-                createNewTag();
-            }
-        });
-        AlertDialog mDialog = mBuilder.create();
-        mDialog.show();
-    }
-
-    public void createNewTag() {
-        AlertDialog.Builder mBuilder = new AlertDialog.Builder(EditNoteActivity.this);
-        mBuilder.setTitle("New tag");
-
-        // Set up the input
-        final EditText input = new EditText(this);
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
-        mBuilder.setView(input);
-
-        mBuilder.setCancelable(false);
-        mBuilder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int which) {
-                String item = input.getText().toString();
-                String[] temp = new String[tagsArray.length + 1];
-                boolean[] tempBoolArray = new boolean[checkedTags.length + 1];
-                for(int i = 0; i < tagsArray.length; i++) {
-                    temp[i] = tagsArray[i];
-                    tempBoolArray[i] = checkedTags[i];
-                }
-                temp[temp.length -1] = item;
-                tempBoolArray[tempBoolArray.length -1] = false;
-
-                tagsArray = temp;
-                checkedTags = tempBoolArray;
-                for(int i = 0; i < tagsArray.length; i++) {
-                    Log.d("TAGSTOPRINT", tagsArray[i] + " " + checkedTags[i]);
-                    updateTagsPrefs("tag"+i, tagsArray[i]);
-                }
-                updateTagsPrefs("tagArray-length", tagsArray.length +"");
-            }
-        });
-
-        mBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-
-        AlertDialog mDialog = mBuilder.create();
-        mDialog.show();
-    }
-
-    private void updateTagsPrefs(String field, String value) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(field, value);
-        editor.apply();
-    }
-
-    private String getTagsPrefs(String field) {
-        return sharedPreferences.getString(field, "");
+        tagsDialog.chooseTags();
     }
 
 }
