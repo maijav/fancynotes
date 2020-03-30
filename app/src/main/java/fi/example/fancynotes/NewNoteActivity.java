@@ -3,7 +3,9 @@ package fi.example.fancynotes;
 import android.Manifest;
 import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -15,13 +17,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.InputType;
 import android.text.Layout;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -33,6 +39,7 @@ import java.util.List;
 import java.util.UUID;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
@@ -60,6 +67,13 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
     public static final int RECORD_AUDIO = 1000;
     boolean hasRecorded = false;
 
+    Button tagsButton;
+    TextView chosenTags;
+    String[] tagsArray;
+    boolean[] checkedTags;
+    ArrayList<Integer> mSelectedTags = new ArrayList<>();
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,15 +83,21 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         editTextTitle = (EditText) findViewById(R.id.newTitleEditText);
         addImgLayout = (LinearLayout) findViewById(R.id.addImgLayout);
 
+        tagsButton = findViewById(R.id.tagsButton);
+        chosenTags = findViewById(R.id.chosenTags);
+
         stopRecord = (Button) findViewById(R.id.stopRecord);
         startRecord = (Button) findViewById(R.id.startRecord);
 
         startRecord.setEnabled(true);
         stopRecord.setEnabled(false);
 
+
         if(!checkPermissionFromDevice()) {
             requestPermission();
         }
+        sharedPreferences = getSharedPreferences("tags", MODE_PRIVATE);
+        addTags();
 
         mDatabaseHelper = new DatabaseHelper(this);
         noteBackground = "note_placeholder";
@@ -95,6 +115,140 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         });
 
         addImgLayout.addView(addImgBtn);
+    }
+
+    public void addTags() {
+        int tagsArrayLength;
+        try{
+            tagsArrayLength = Integer.parseInt(getTagsPrefs("tagArray-length"));
+        }catch (NumberFormatException e) {
+            tagsArrayLength = 0;
+        }
+
+        tagsArray = new String[tagsArrayLength];
+        for(int i = 0; i < tagsArray.length; i++) {
+            tagsArray[i] = getTagsPrefs("tag"+i);
+        }
+        checkedTags = new boolean[tagsArray.length];
+
+    }
+
+    public void chooseTags(View v) {
+
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(NewNoteActivity.this);
+        mBuilder.setTitle("Tags available to choose from");
+        if(tagsArray.length > 0) {
+            mBuilder.setMultiChoiceItems(tagsArray, checkedTags, new DialogInterface.OnMultiChoiceClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
+                    if(isChecked) {
+                        mSelectedTags.add(position);
+                    } else {
+                        mSelectedTags.remove((Integer.valueOf(position)));
+                    }
+                }
+            });
+        }
+
+
+
+        mBuilder.setCancelable(false);
+        mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                String item = "";
+                for(int i = 0; i < mSelectedTags.size(); i++) {
+                    item = item + tagsArray[mSelectedTags.get(i)];
+                    if(i != mSelectedTags.size() - 1) {
+                        item +=",";
+
+                    }
+                }
+                chosenTags.setText(item);
+            }
+        });
+
+        mBuilder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+            }
+        });
+
+        mBuilder.setNeutralButton("Clear all", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                for(int i = 0; i < checkedTags.length; i++) {
+                    checkedTags[i] = false;
+                    mSelectedTags.clear();
+                    chosenTags.setText("");
+                }
+            }
+        });
+
+        mBuilder.setNeutralButton("+", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                createNewTag();
+            }
+        });
+        AlertDialog mDialog = mBuilder.create();
+        mDialog.show();
+    }
+
+    public void createNewTag() {
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(NewNoteActivity.this);
+        mBuilder.setTitle("New tag");
+
+        // Set up the input
+        final EditText input = new EditText(this);
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+        mBuilder.setView(input);
+
+        mBuilder.setCancelable(false);
+        mBuilder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                String item = input.getText().toString();
+                String[] temp = new String[tagsArray.length + 1];
+                boolean[] tempBoolArray = new boolean[checkedTags.length + 1];
+                for(int i = 0; i < tagsArray.length; i++) {
+                    temp[i] = tagsArray[i];
+                    tempBoolArray[i] = checkedTags[i];
+                }
+                temp[temp.length -1] = item;
+                tempBoolArray[tempBoolArray.length -1] = false;
+
+                tagsArray = temp;
+                checkedTags = tempBoolArray;
+                for(int i = 0; i < tagsArray.length; i++) {
+                    Log.d("TAGSTOPRINT", tagsArray[i] + " " + checkedTags[i]);
+                    updateTagsPrefs("tag"+i, tagsArray[i]);
+                }
+                updateTagsPrefs("tagArray-length", tagsArray.length +"");
+            }
+        });
+
+        mBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        AlertDialog mDialog = mBuilder.create();
+        mDialog.show();
+    }
+
+    private void updateTagsPrefs(String field, String value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(field, value);
+        editor.apply();
+    }
+
+    private String getTagsPrefs(String field) {
+        return sharedPreferences.getString(field, "");
     }
 
     public void showCameraDialog() {
