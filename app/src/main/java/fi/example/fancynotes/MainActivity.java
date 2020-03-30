@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.widget.Toolbar;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,8 +39,11 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.mainAppBar);
+        setSupportActionBar(toolbar);
+
         mDatabaseHelper = new DatabaseHelper(this);
-        text = findViewById(R.id.fetchingText);
+//        text = findViewById(R.id.fetchingText);
         fetch = findViewById(R.id.fetchButton);
         System.out.println("Moi Hanski");
         System.out.println("Moi Maija");

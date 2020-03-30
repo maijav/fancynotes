@@ -3,23 +3,70 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    android:background="@drawable/white_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:layout_width="match_parent"
+    <include
+        android:id="@+id/mainAppBar"
+        layout="@layout/toolbar"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/newNote"
-        android:onClick="createNewNote"
-        android:text="New note"/>
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="50dp"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/note_placeholder"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fancy\nNotes"
+            android:textSize="40sp"
+            android:fontFamily="@font/kalam_regular"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="25dp"
+        android:layout_gravity="center"
+        android:id="@+id/newNote"
+        android:background="@drawable/yellow_btn"
+        android:onClick="createNewNote"
+        android:text="New note"
+        android:textSize="20sp"
+        android:fontFamily="@font/kalam_regular"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="25dp"
         android:id="@+id/allNotes"
+        android:layout_gravity="center"
+        android:background="@drawable/yellow_btn"
         android:onClick="seeAllNotes"
-        android:text="All notes"/>
+        android:text="All notes"
+        android:textSize="20sp"
+        android:fontFamily="@font/kalam_regular"/>
 
     <Button
         android:layout_width="match_parent"
@@ -27,13 +74,5 @@
         android:id="@+id/fetchButton"
         android:onClick="onClick"
         android:text="fetching"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/fetchingText"/>
-
-
-
 
 </LinearLayout>
