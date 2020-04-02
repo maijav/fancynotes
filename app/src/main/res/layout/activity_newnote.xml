@@ -108,6 +108,19 @@
         android:gravity="center"/>
 
     <Button
+        android:id="@+id/timedNoteBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Timed note"
+        android:onClick="timedNote"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/chosenTimeTV"
+        android:gravity="center"/>
+
+    <Button
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

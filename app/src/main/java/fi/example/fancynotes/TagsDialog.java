@@ -32,6 +32,7 @@ public class TagsDialog extends AlertDialog {
         addTags();
         Log.d("GOTHERE", context.getClass().toString());
         if(context.getClass().toString().contains("EditNoteActivity")) {
+
             chosenTags = (TextView) ((Activity)context).findViewById(R.id.chosenNewTags);
         } else {
             chosenTags = (TextView) ((Activity)context).findViewById(R.id.chosenTags);

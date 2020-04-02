@@ -1,6 +1,8 @@
 package fi.example.fancynotes;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
@@ -23,17 +25,20 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -44,18 +49,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
+import android.text.format.DateFormat;
 
-public class NewNoteActivity extends AppCompatActivity implements CameraDialog_Fragment.NoticeDialogListener {
+public class NewNoteActivity extends AppCompatActivity implements CameraDialog_Fragment.NoticeDialogListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     DatabaseHelper mDatabaseHelper;
+
     private Button addBtn;
     private EditText editTextNote;
     private EditText editTextTitle;
+
     private String noteBackground;
     private String imageUri;
     String currentPhotoPath;
+
     static final int ImageRequestCode = 1;
     static final int ImageCaptureRequestCode = 1;
     static Uri pickedImgUri;
+
     private Button addImgBtn;
     private LinearLayout addImgLayout;
     private ImageView usersPhoto;
@@ -72,6 +82,11 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
     SharedPreferences sharedPreferences;
     TagsDialog tagsDialog;
 
+    private Button timedNoteBtn;
+    private TextView chosenTimeTV;
+    int day, month, year, hour, minute;
+    int dayFinal, monthFinal, yearFinal, hourFinal, minuteFinal;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +98,9 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
 
         tagsButton = findViewById(R.id.tagsButton);
         chosenTags = findViewById(R.id.chosenTags);
+
+        timedNoteBtn = findViewById(R.id.timedNoteBtn);
+        chosenTimeTV = findViewById(R.id.chosenTimeTV);
 
         stopRecord = (Button) findViewById(R.id.stopRecord);
         startRecord = (Button) findViewById(R.id.startRecord);
@@ -203,6 +221,38 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
 
     }
 
+    public void timedNote(View v) {
+        Calendar c = Calendar.getInstance();
+        year = c.get(Calendar.YEAR);
+        month = c.get(Calendar.MONTH);
+        day = c.get(Calendar.DATE);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(NewNoteActivity.this, NewNoteActivity.this, year, month, day);
+        datePickerDialog.show();
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+        yearFinal = i;
+        monthFinal = i1;
+        dayFinal = i2;
+
+        Calendar c = Calendar.getInstance();
+        hour = c.get(Calendar.HOUR_OF_DAY);
+        minute = c.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(NewNoteActivity.this, NewNoteActivity.this, hour, minute, DateFormat.is24HourFormat(this));
+        timePickerDialog.show();
+
+    }
+
+    @Override
+    public void onTimeSet(TimePicker timePicker, int i, int i1) {
+        hourFinal = i;
+        minuteFinal = i1;
+
+        chosenTimeTV.setText( "Day: " + dayFinal + " Month: " + monthFinal + " Year: " + yearFinal +  " Hour: " + hourFinal + " Minutes: " + minuteFinal);
+    }
 
     public void addNote(String newEntryTitle, String newEntryNote) {
         Cursor data = mDatabaseHelper.getLatestInOrder();
@@ -354,5 +404,6 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
+
 
 }
