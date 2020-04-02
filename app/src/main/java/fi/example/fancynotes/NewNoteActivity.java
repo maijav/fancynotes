@@ -246,8 +246,6 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
 
         TimePickerDialog timePickerDialog = new TimePickerDialog(NewNoteActivity.this, NewNoteActivity.this, hour, minute, DateFormat.is24HourFormat(this));
         timePickerDialog.show();
-
-
     }
 
     @Override

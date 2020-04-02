@@ -2,6 +2,7 @@ package fi.example.fancynotes;
 
 import android.os.Build;
 
+import java.util.Date;
 import java.util.Optional;
 
 public class Note {
@@ -13,11 +14,12 @@ public class Note {
     int orderId;
     private String noteBackground;
     private String tags;
+    private Date time;
 
     public Note() {
     }
 
-    public Note(int id, int orderId, String title, String note, String noteBackground, String imageUri, String voiceUri, String tags) {
+    public Note(int id, int orderId, String title, String note, String noteBackground, String imageUri, String voiceUri, String tags, Date time) {
         this.id = id;
         this.orderId = orderId;
         this.title = title;
@@ -26,7 +28,18 @@ public class Note {
         this.imageUri = imageUri;
         this.voiceUri = voiceUri;
         this.tags = tags;
+        this.time = time;
+
     }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
 
     public String getTags() {
         return tags;

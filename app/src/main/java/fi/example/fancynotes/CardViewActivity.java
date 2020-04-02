@@ -14,8 +14,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,11 +62,13 @@ public class CardViewActivity extends AppCompatActivity{
             String imageUri = data.getString(5);
             String voiceUri = data.getString(6);
             String tags = data.getString(7);
-            Log.d("noteDATA", id + title + text);
+            String dateS = data.getString(8);
+            Log.d("noteDATA", id + title + text + dateS);
             Log.d("ORDERID", orderId + " from cardview");
 
+            Date date = Util.parseDateFormat(dateS);
 //            Log.d("noteDATA", id + title + text);
-            noteList.add(new Note(id, orderId, title, text, backGround, imageUri, voiceUri,tags));
+            noteList.add(new Note(id, orderId, title, text, backGround, imageUri, voiceUri, tags, date));
         }
 //
 //

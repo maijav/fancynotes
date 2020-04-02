@@ -28,6 +28,7 @@ public class EditNoteActivity extends AppCompatActivity {
     String title;
     String description;
     String tags;
+    String dateS;
 
     Button tagsEditButton;
     TextView chosenNewTags;
@@ -54,6 +55,7 @@ public class EditNoteActivity extends AppCompatActivity {
         id = intent.getExtras().getInt("fi.example.fancynotes.id");
         title = intent.getExtras().getString("fi.example.fancynotes.title");
         tags = intent.getExtras().getString("fi.example.fancynotes.tags");
+        dateS = intent.getExtras().getString("fi.example.fancynotes.date");
 
         editTextNote.setText(description);
         editTextTitle.setText(title);

@@ -15,6 +15,9 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,12 +25,14 @@ public class CardItemContentsActivity extends AppCompatActivity {
 
     private TextView tvDesc;
     private TextView tagsToDisplay;
+    private TextView timeToDisplay;
     private ImageView img;
     DatabaseHelper mDatabaseHelper;
     int id;
     int orderId;
     String title;
     String description;
+    Date time;
     private Intent intent;
 
     String tags ="";
@@ -59,7 +64,10 @@ public class CardItemContentsActivity extends AppCompatActivity {
         title = intent.getExtras().getString("fi.example.fancynotes.title");
         outputFileForAudio = intent.getExtras().getString("fi.example.fancynotes.voiceUri");
         tags = intent.getExtras().getString("fi.example.fancynotes.tags");
-        Log.d("AUDIONULL", outputFileForAudio);
+        String dateS = intent.getExtras().getString("fi.example.fancynotes.date");
+
+        Log.d("DATEE", dateS);
+        Date date = Util.parseDateFormat(dateS);
 
         if(outputFileForAudio.equals("No Audio")) {
             Log.d("AUDIONULL", outputFileForAudio + " was indeed null");
@@ -70,6 +78,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
 
         tvDesc.setText(description);
         tagsToDisplay.setText(tags);
+        timeToDisplay.setText(date.toString());
     }
 
     public void startAudio(View v) {
@@ -124,6 +133,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
         newIntent.putExtra("fi.example.fancynotes.orderid", orderId);
         newIntent.putExtra("fi.example.fancynotes.title", title);
         newIntent.putExtra("fi.example.fancynotes.tags", tags);
+        newIntent.putExtra("fi.example.fancynotes.date", time.toString());
         startActivity(newIntent);
     }
 
