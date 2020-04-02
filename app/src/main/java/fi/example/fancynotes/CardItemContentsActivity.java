@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -51,6 +52,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
         tvDesc = (TextView) findViewById(R.id.txtdesc);
         img = (ImageView) findViewById(R.id.itemthumbnail);
         tagsToDisplay = findViewById(R.id.tagsToDisplay);
+        timeToDisplay = findViewById(R.id.timeToDisplay);
         stopAudio = (Button) findViewById(R.id.stopAudio);
         startAudio = (Button) findViewById(R.id.startAudio);
         stopAudio.setEnabled(false);
@@ -66,9 +68,8 @@ public class CardItemContentsActivity extends AppCompatActivity {
         tags = intent.getExtras().getString("fi.example.fancynotes.tags");
         String dateS = intent.getExtras().getString("fi.example.fancynotes.date");
 
-        Log.d("DATEE", dateS);
-        Date date = Util.parseDateFormat(dateS);
-
+        Calendar date = Util.parseStringToCalendar(dateS);
+        Log.d("DATEE", " asdkasodkasdo " + dateS + "");
         if(outputFileForAudio.equals("No Audio")) {
             Log.d("AUDIONULL", outputFileForAudio + " was indeed null");
             startAudio.setEnabled(false);
@@ -78,7 +79,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
 
         tvDesc.setText(description);
         tagsToDisplay.setText(tags);
-        timeToDisplay.setText(date.toString());
+        timeToDisplay.setText(Util.parseDateToString(date.getTime()));
     }
 
     public void startAudio(View v) {

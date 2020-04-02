@@ -1,19 +1,32 @@
 package fi.example.fancynotes;
 
+import android.util.Log;
+
+import java.io.Console;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Util {
+    static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
-    public static Date parseDateFormat(String dateS) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-        Date date = new Date();
+    public static String parseDateToString(Date date) {
+        String dateS = dateFormat.format(date);
+        Log.d("DATEE", " PARSE DATE TO STRING DATES " +  dateS);
+        return dateS;
+    }
+
+    public static Calendar parseStringToCalendar(String dateS) {
+        Log.d("DATEE", " PARSE STRING TO CALENDAR " +  dateS);
+        Calendar date = Calendar.getInstance();
+        Date d = new Date();
         try {
-            date = dateFormat.parse(dateS);
+            d = dateFormat.parse(dateS);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return date;
+        date.setTime(d);
+       return date;
     }
 }

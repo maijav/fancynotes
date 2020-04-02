@@ -18,6 +18,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -66,7 +67,7 @@ public class CardViewActivity extends AppCompatActivity{
             Log.d("noteDATA", id + title + text + dateS);
             Log.d("ORDERID", orderId + " from cardview");
 
-            Date date = Util.parseDateFormat(dateS);
+            Calendar date = Util.parseStringToCalendar(dateS);
 //            Log.d("noteDATA", id + title + text);
             noteList.add(new Note(id, orderId, title, text, backGround, imageUri, voiceUri, tags, date));
         }

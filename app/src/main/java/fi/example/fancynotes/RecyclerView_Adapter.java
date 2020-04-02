@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +61,7 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adap
                 newIntent.putExtra("fi.example.fancynotes.imageUri", mData.get(position).getImageUri());
                 newIntent.putExtra("fi.example.fancynotes.voiceUri", mData.get(position).getVoiceUri());
                 newIntent.putExtra("fi.example.fancynotes.tags", mData.get(position).getTags());
+                newIntent.putExtra("fi.example.fancynotes.date", Util.parseDateToString(mData.get(position).getDate().getTime()));
                 mContext.startActivity(newIntent);
 
             }

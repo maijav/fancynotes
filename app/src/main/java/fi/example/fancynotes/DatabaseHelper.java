@@ -11,6 +11,7 @@ import android.util.Log;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -67,6 +68,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL6, audioUri);
         contentValues.put(COL7, tags);
         contentValues.put(COL8, dateFormat.format(timedDate));
+        Log.d("DATEE", " DATABASEHELPER FORMAT DATE " +  dateFormat.format(timedDate));
 
         Log.d(TAG, "addData: Adding" + orderId + " to " + TABLE_NAME);
         Log.d(TAG, "addData: Adding" + title + " to " + TABLE_NAME);

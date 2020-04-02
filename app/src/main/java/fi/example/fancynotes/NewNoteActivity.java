@@ -86,7 +86,7 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
     private TextView chosenTimeTV;
     int day, month, year, hour, minute;
     int dayFinal, monthFinal, yearFinal, hourFinal, minuteFinal;
-    Calendar c;
+    Calendar sendForward;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,8 +131,6 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
 
         addImgLayout.addView(addImgBtn);
         tagsDialog = new TagsDialog(this);
-
-        c = Calendar.getInstance();
     }
 
     public void chooseTags(View v) {
@@ -225,7 +223,7 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
     }
 
     public void timedNote(View v) {
-//        c = Calendar.getInstance();
+        Calendar c = Calendar.getInstance();
         year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH);
         day = c.get(Calendar.DATE);
@@ -237,15 +235,16 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
         yearFinal = i;
-        monthFinal = i1;
+        monthFinal = i1; // months are indexed starting at 0
         dayFinal = i2;
-
-//        c = Calendar.getInstance();
+        Log.d("DATEE", i1 + " MONTH");
+        Calendar c = Calendar.getInstance();
         hour = c.get(Calendar.HOUR_OF_DAY);
         minute = c.get(Calendar.MINUTE);
 
         TimePickerDialog timePickerDialog = new TimePickerDialog(NewNoteActivity.this, NewNoteActivity.this, hour, minute, DateFormat.is24HourFormat(this));
         timePickerDialog.show();
+
     }
 
     @Override
@@ -253,7 +252,7 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         hourFinal = i;
         minuteFinal = i1;
 
-        chosenTimeTV.setText( "Day: " + dayFinal + " Month: " + monthFinal + " Year: " + yearFinal +  " Hour: " + hourFinal + " Minutes: " + minuteFinal);
+        chosenTimeTV.setText( " Day: " + dayFinal + " Month: " + monthFinal + " Year: " + yearFinal +  " Hour: " + hourFinal + " Minutes: " + minuteFinal);
 
     }
 
@@ -283,7 +282,12 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
             outputFileForAudio = "No Audio";
         }
 
-        boolean insertData = mDatabaseHelper.addData(orderId,newEntryTitle, newEntryNote, noteBackground, imageUri, outputFileForAudio, tagsDialog.getSelectedTags(), c.getTime());
+        sendForward = Calendar.getInstance();
+
+        sendForward.set(yearFinal, monthFinal, dayFinal, hourFinal, minuteFinal);
+        Log.d("DATEE",  monthFinal + " MONTH " + sendForward.getTime() + " SENDFORWARDTIME");
+
+        boolean insertData = mDatabaseHelper.addData(orderId,newEntryTitle, newEntryNote, noteBackground, imageUri, outputFileForAudio, tagsDialog.getSelectedTags(), sendForward.getTime());
 
         if(insertData) {
             toastMessage("Data successfully Inserted");
