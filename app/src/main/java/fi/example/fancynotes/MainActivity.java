@@ -1,5 +1,6 @@
 package fi.example.fancynotes;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -18,6 +19,9 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -44,7 +48,7 @@ public class MainActivity extends AppCompatActivity{
 
         mDatabaseHelper = new DatabaseHelper(this);
 //        text = findViewById(R.id.fetchingText);
-        fetch = findViewById(R.id.fetchButton);
+//        fetch = findViewById(R.id.fetchButton);
         System.out.println("Moi Hanski");
         System.out.println("Moi Maija");
 
@@ -60,7 +64,7 @@ public class MainActivity extends AppCompatActivity{
         startActivity(i);
     }
 
-    public void onClick(View view) {
+    public void onClick() {
 
         Intent i = new Intent(this, MyService.class);
         startService(i);
@@ -77,4 +81,24 @@ public class MainActivity extends AppCompatActivity{
         }, new IntentFilter("donaldduck"));
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.welcome_activity_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.settingsMenu:
+                Log.d("MENUTEST", "settings");
+                return true;
+            case R.id.fetchMenu:
+                onClick();
+                return true;
+            default: return super.onOptionsItemSelected(item);
+        }
+
+    }
 }
