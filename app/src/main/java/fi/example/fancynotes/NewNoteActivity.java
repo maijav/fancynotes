@@ -3,33 +3,22 @@ package fi.example.fancynotes;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.ComponentName;
-import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.text.InputType;
-import android.text.Layout;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -37,18 +26,19 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
 import android.text.format.DateFormat;
 
 public class NewNoteActivity extends AppCompatActivity implements CameraDialog_Fragment.NoticeDialogListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
@@ -138,6 +128,7 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
 
     }
 
+    //Ask user, if they want to use phone camera or pick image from phone gallery
     public void showCameraDialog() {
         DialogFragment dialog = new CameraDialog_Fragment();
         dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
@@ -287,6 +278,12 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         sendForward.set(yearFinal, monthFinal, dayFinal, hourFinal, minuteFinal);
         Log.d("DATEE",  monthFinal + " MONTH " + sendForward.getTime() + " SENDFORWARDTIME");
 
+        //Check if user has chosen timed note and if so, start worker for notification
+        if(yearFinal != 0) {
+            Log.d("NOTIFIKAATIO", "notif1");
+            startTimedNoteWorker(sendForward.getTime());
+        }
+
         boolean insertData = mDatabaseHelper.addData(orderId,newEntryTitle, newEntryNote, noteBackground, imageUri, outputFileForAudio, tagsDialog.getSelectedTags(), sendForward.getTime());
 
         if(insertData) {
@@ -338,7 +335,6 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
     public void openCamera(){
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
             File photoFile = null;
@@ -346,7 +342,6 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
                 photoFile = createImageFile();
             } catch (IOException ex) {
             }
-            // Continue only if the File was successfully created
             if (photoFile != null) {
 
                 pickedImgUri = FileProvider.getUriForFile(this,
@@ -406,11 +401,33 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
-
-        // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
+    //Start worker to trigger notification on selected point of time
+    public void startTimedNoteWorker(Date date){
+        //set a tag to be able to cancel all work of this type if needed
+        final String workTag = "notificationWork";
+
+        OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotificationWorker.class)
+                .setInitialDelay(calculateDelay(date), TimeUnit.MILLISECONDS)
+                .addTag(workTag)
+                .build();
+
+        WorkManager.getInstance(getApplicationContext()).enqueue(notificationWork);
+    }
+
+    public long calculateDelay(Date date){
+        Date date2 = new Date();
+
+        return getDateDiff(date, date2);
+    }
+
+    public static long getDateDiff(Date date1, Date date2) {
+        long diffInMillies = date1.getTime() - date2.getTime();
+        Log.d("NOTIFIKAATIO", "" + diffInMillies);
+        return diffInMillies;
+    }
 
 }

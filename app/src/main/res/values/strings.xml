@@ -4,6 +4,10 @@
     <string name="dialog_message">Pick the image from: </string>
     <string name="dialog_title">Test</string>
 
+    <string name="channel_name">It\'s time!</string>
+    <string name="channel_description">Timed note</string>
+    <string name="apply_on_boot">It\'s time! Check your note.</string>
+
     <string-array name="Choice">
         <item>Phone gallery</item>
         <item>Open camera</item>
