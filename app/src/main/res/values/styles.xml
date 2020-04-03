@@ -8,4 +8,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="BottomBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="bottomNavigationStyle">@style/MyApp.ActionBar</item>
+    </style>
+
+    <!-- Bonus: if you want to style whole Action Bar, not just the menu -->
+    <style name="MyApp.ActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid">
+        <!-- Blue background color & black bottom border -->
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
 </resources>

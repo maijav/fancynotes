@@ -410,8 +410,11 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         //set a tag to be able to cancel all work of this type if needed
         final String workTag = "notificationWork";
 
+        long dateDiffInMills = calculateDelay(date);
+        Log.d("NOTIFIKAATIO", "" + dateDiffInMills);
+        dateDiffInMills = 60000;
         OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotificationWorker.class)
-                .setInitialDelay(calculateDelay(date), TimeUnit.MILLISECONDS)
+                .setInitialDelay(dateDiffInMills, TimeUnit.MILLISECONDS)
                 .addTag(workTag)
                 .build();
 
@@ -426,7 +429,6 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
 
     public static long getDateDiff(Date date1, Date date2) {
         long diffInMillies = date1.getTime() - date2.getTime();
-        Log.d("NOTIFIKAATIO", "" + diffInMillies);
         return diffInMillies;
     }
 

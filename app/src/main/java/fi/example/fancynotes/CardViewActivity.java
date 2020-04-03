@@ -6,10 +6,15 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.ActionMenuView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,11 +38,24 @@ public class CardViewActivity extends AppCompatActivity{
     int item1Id;
     int item2Id;
     int orderIdOfDeleted = 0;
+    private ActionMenuView amvMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cardview);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.bottomMenu);
+        amvMenu = (ActionMenuView) toolbar.findViewById(R.id.amvMenu);
+        amvMenu.setOnMenuItemClickListener(new ActionMenuView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                return onOptionsItemSelected(menuItem);
+            }
+        });
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+
         mDatabaseHelper = new DatabaseHelper(this);
 
         Cursor data = mDatabaseHelper.getAllData();
@@ -71,18 +89,7 @@ public class CardViewActivity extends AppCompatActivity{
 //            Log.d("noteDATA", id + title + text);
             noteList.add(new Note(id, orderId, title, text, backGround, imageUri, voiceUri, tags, date));
         }
-//
-//
-//        Intent intent = getIntent();
-//        if(intent.hasExtra("fi.example.fancynotes.notes") && intent.hasExtra("fi.example.fancynotes.photo")){
-//            notes = intent.getExtras().getString("fi.example.fancynotes.notes");
-//            photo1 = intent.getExtras().getString("fi.example.fancynotes.photo");
-//
-//            if(photo1 != null && notes != null) {
-//                //photo = Uri.parse(photo1);
-//                noteList.add(new Note(notes, photo1));
-//            }
-//        }
+
 
         RecyclerView myRv = (RecyclerView) findViewById(R.id.recyclerview_id);
         final RecyclerView_Adapter myAdapter = new RecyclerView_Adapter(this, noteList);
@@ -112,10 +119,41 @@ public class CardViewActivity extends AppCompatActivity{
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
             }
         });
         moveItemHelper.attachToRecyclerView(myRv);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.cardview_bottom_menu, amvMenu.getMenu());
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_add:
+                movetoNewNoteActivity();
+                return true;
+            case R.id.nav_home:
+                onBackPressed();
+                return true;
+            case R.id.nav_search:
+                filterNotes();
+                return true;
+            default: return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void movetoNewNoteActivity(){
+        Intent i= new Intent(CardViewActivity.this, NewNoteActivity.class);
+        startActivity(i);
+    }
+
+    public void filterNotes(){
+
     }
 
     @Override
