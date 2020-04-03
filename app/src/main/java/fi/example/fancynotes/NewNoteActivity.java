@@ -412,7 +412,7 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
 
         long dateDiffInMills = calculateDelay(date);
         Log.d("NOTIFIKAATIO", "" + dateDiffInMills);
-        dateDiffInMills = 60000;
+//        dateDiffInMills = 60000;
         OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotificationWorker.class)
                 .setInitialDelay(dateDiffInMills, TimeUnit.MILLISECONDS)
                 .addTag(workTag)
