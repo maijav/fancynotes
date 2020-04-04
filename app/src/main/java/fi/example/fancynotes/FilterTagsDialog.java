@@ -1,13 +1,14 @@
 package fi.example.fancynotes;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ public class FilterTagsDialog extends AlertDialog{
     String[] tagsArray;
     boolean[] checkedTags;
     ArrayList<Integer> mSelectedTags = new ArrayList<>();
-    String tagsToBeAdded;
+    ArrayList<String> chosenTags;
 
     protected FilterTagsDialog(Context context) {
         super(context);
@@ -27,8 +28,13 @@ public class FilterTagsDialog extends AlertDialog{
         addTags();
     }
 
-    public String getSelectedTags() {
-        return tagsToBeAdded;
+    public void getSelectedTags() {
+        LocalBroadcastManager manager = LocalBroadcastManager.getInstance(getContext());
+        Intent i = new Intent("filterTags");
+        Bundle extra = new Bundle();
+        extra.putSerializable("tagsArray", chosenTags);
+        i.putExtra("extra", extra);
+        manager.sendBroadcast(i);
     }
 
     //Add tags found in shared preferences to tagsArray (String)
@@ -49,6 +55,7 @@ public class FilterTagsDialog extends AlertDialog{
 
     //Choose tags to filter notes
     public void chooseTags() {
+        chosenTags = new ArrayList<String>();
 
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
         mBuilder.setTitle("Filter notes with tags:");
@@ -71,14 +78,10 @@ public class FilterTagsDialog extends AlertDialog{
         mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
-//                tagsToBeAdded = "";
-//                for(int i = 0; i < mSelectedTags.size(); i++) {
-//                    tagsToBeAdded = tagsToBeAdded + tagsArray[mSelectedTags.get(i)];
-//                    if(i != mSelectedTags.size() - 1) {
-//                        tagsToBeAdded +=",";
-//
-//                    }
-//                }
+                for(int i = 0; i < mSelectedTags.size(); i++) {
+                    chosenTags.add(tagsArray[mSelectedTags.get(i)]);
+                }
+                getSelectedTags();
             }
         });
 

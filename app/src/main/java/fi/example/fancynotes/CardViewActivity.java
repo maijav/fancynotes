@@ -1,7 +1,10 @@
 package fi.example.fancynotes;
 
 import android.app.LauncherActivity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,11 +13,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.ActionMenuView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -92,7 +97,6 @@ public class CardViewActivity extends AppCompatActivity{
             noteList.add(new Note(id, orderId, title, text, backGround, imageUri, voiceUri, tags, date));
         }
 
-
         RecyclerView myRv = (RecyclerView) findViewById(R.id.recyclerview_id);
         final RecyclerView_Adapter myAdapter = new RecyclerView_Adapter(this, noteList);
         myRv.setLayoutManager(new GridLayoutManager(this, 2));
@@ -156,6 +160,40 @@ public class CardViewActivity extends AppCompatActivity{
 
     public void filterNotes(){
         filterTagsDialog.chooseTags();
+        LocalBroadcastManager.getInstance(this).registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                ArrayList<String> tagsArray = new ArrayList<String>();
+                if(intent.hasExtra("extra")){
+                    Bundle extra = intent.getBundleExtra("extra");
+                    tagsArray = (ArrayList<String>) extra.getSerializable("tagsArray");
+                }
+                createFilteredNoteList(tagsArray);
+            }
+        }, new IntentFilter("filterTags"));
+
+    }
+
+    public void createFilteredNoteList(ArrayList<String> tagsArray){
+        if(tagsArray.isEmpty()){
+            showAllNotes();
+        }else{
+            ArrayList<Note> noteListTemp = new ArrayList<Note>();
+            for(Note note: noteList){
+                String noteTags = note.getTags();
+                for(String tag: tagsArray){
+                    if(!noteTags.equals(null)){
+                        if(noteTags.contains(tag)){
+                            noteListTemp.add(note);
+                        }
+                    }
+                }
+            }
+            RecyclerView myRv = (RecyclerView) findViewById(R.id.recyclerview_id);
+            final RecyclerView_Adapter myAdapter = new RecyclerView_Adapter(this, noteListTemp);
+            myRv.setLayoutManager(new GridLayoutManager(this, 2));
+            myRv.setAdapter(myAdapter);
+        }
     }
 
     @Override
@@ -164,4 +202,12 @@ public class CardViewActivity extends AppCompatActivity{
         startActivity(i);
         finish();
     }
+
+    public void showAllNotes(){
+        RecyclerView myRv = (RecyclerView) findViewById(R.id.recyclerview_id);
+        final RecyclerView_Adapter myAdapter = new RecyclerView_Adapter(this, noteList);
+        myRv.setLayoutManager(new GridLayoutManager(this, 2));
+        myRv.setAdapter(myAdapter);
+    }
+
 }
