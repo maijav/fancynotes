@@ -33,18 +33,6 @@ public class NotificationWorker extends Worker {
 
     public void triggerNotification() {
         Log.d("NOTIFIKAATIO", "notif2");
-//            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
-//            mBuilder.setSmallIcon(R.mipmap.ic_launcher);
-//            mBuilder.setContentTitle("It\\'s time!");
-//            mBuilder.setContentText("It\\'s time! Check your note.");
-//
-//            Notification notification = mBuilder.build();
-//
-//            NotificationManager mNotificationManager =
-//                    (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//            int mId = 1;
-//            mNotificationManager.notify(mId, notification);
 
         CHANNEL_ID = "Notification";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

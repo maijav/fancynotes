@@ -35,6 +35,7 @@ public class CardViewActivity extends AppCompatActivity{
     String photo1;
     List<Note> noteList;
     DatabaseHelper mDatabaseHelper;
+    FilterTagsDialog filterTagsDialog;
     int item1Id;
     int item2Id;
     int orderIdOfDeleted = 0;
@@ -57,6 +58,7 @@ public class CardViewActivity extends AppCompatActivity{
         setSupportActionBar(toolbar);
 
         mDatabaseHelper = new DatabaseHelper(this);
+        filterTagsDialog = new FilterTagsDialog(this);
 
         Cursor data = mDatabaseHelper.getAllData();
 
@@ -153,7 +155,7 @@ public class CardViewActivity extends AppCompatActivity{
     }
 
     public void filterNotes(){
-
+        filterTagsDialog.chooseTags();
     }
 
     @Override

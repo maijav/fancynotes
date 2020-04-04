@@ -56,6 +56,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
         stopAudio = (Button) findViewById(R.id.stopAudio);
         startAudio = (Button) findViewById(R.id.startAudio);
         stopAudio.setEnabled(false);
+
         //Receiving data
         Log.d("PAPA","HI");
 
