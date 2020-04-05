@@ -182,7 +182,7 @@ public class CardViewActivity extends AppCompatActivity{
             for(Note note: noteList){
                 String noteTags = note.getTags();
                 for(String tag: tagsArray){
-                    if(!noteTags.equals(null)){
+                    if(noteTags != null && !noteTags.isEmpty()){
                         if(noteTags.contains(tag)){
                             noteListTemp.add(note);
                         }

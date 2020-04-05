@@ -1,6 +1,7 @@
 package fi.example.fancynotes;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -267,6 +268,7 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
 
         if(pickedImgUri != null){
             imageUri = pickedImgUri.toString();
+            pickedImgUri = null;
         }
 
         if(outputFileForAudio == null) {
@@ -362,14 +364,21 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         if (resultCode == RESULT_OK && requestCode == ImageRequestCode && data != null){
             //the user has picked an image from phone gallery
             //reference to image is saved to a Uri variable
+
             pickedImgUri = data.getData();
-            Log.d("KAMERA", pickedImgUri.toString());
             usersPhoto.setImageURI(pickedImgUri);
         }else if (requestCode == ImageCaptureRequestCode && resultCode == RESULT_OK) {
             usersPhoto.setImageURI(pickedImgUri);
         }
-        addImgLayout.removeView(addImgBtn);
-        addImgLayout.addView(usersPhoto);
+
+        if (resultCode == Activity.RESULT_CANCELED) {
+            pickedImgUri = null;
+        }
+
+        if(pickedImgUri != null){
+            addImgLayout.removeView(addImgBtn);
+            addImgLayout.addView(usersPhoto);
+        }
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(500,500);
         usersPhoto.setLayoutParams(params);

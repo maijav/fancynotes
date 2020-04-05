@@ -7,125 +7,140 @@
     tools:context=".MainActivity"
     android:orientation="vertical">
 
-    <TextView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="New note"
-        android:textSize="30dp"
-        android:layout_marginBottom="30dp"/>
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:padding="10dp">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/newTitleEditText"
-        android:hint="title"
-        />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-         android:id="@+id/newNoteEditText"
-        android:hint="write note here"
-        />
-
-    <LinearLayout
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/addImgLayout"
-        android:orientation="vertical">
-    </LinearLayout>
-
-    <TextView
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Choose note color:"/>
-
-    <LinearLayout
-        android:id="@+id/LinearLayout02"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_alignParentBottom="true">
-
-        <Button
-            android:id="@+id/blueNote"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="chooseNoteBackground"
-            android:text="Blue">
-        </Button>
-        <Button
-            android:id="@+id/pinkNote"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Pink"
-            android:layout_marginBottom="10dp">
-        </Button>
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="New note"
+                android:textSize="30dp"
+                android:layout_marginBottom="30dp"/>
 
-    <LinearLayout
-        android:id="@+id/LinearLayout03"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_alignParentBottom="true">
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Start record"
-            android:layout_weight="1"
-            android:textSize="20sp"
-            android:id="@+id/startRecord"
-            android:onClick="startRecord"
-            />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/newTitleEditText"
+                android:hint="title"
+                />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Stop record"
-            android:layout_weight="1"
-            android:textSize="20sp"
-            android:id="@+id/stopRecord"
-            android:onClick="stopRecord"
-            />
-    </LinearLayout>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                 android:id="@+id/newNoteEditText"
+                android:hint="write note here"
+                />
 
-    <Button
-        android:id="@+id/tagsButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Choose Tags"
-        android:onClick="chooseTags"/>
+            <LinearLayout
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/addImgLayout"
+                android:orientation="vertical">
+            </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/chosenTags"
-        android:gravity="center"/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Choose note color:"/>
 
-    <Button
-        android:id="@+id/timedNoteBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Timed note"
-        android:onClick="timedNote"/>
+            <LinearLayout
+                android:id="@+id/LinearLayout02"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_alignParentBottom="true">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/chosenTimeTV"
-        android:gravity="center"/>
+                <Button
+                    android:id="@+id/blueNote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="chooseNoteBackground"
+                    android:text="Blue">
+                </Button>
+                <Button
+                    android:id="@+id/pinkNote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Pink"
+                    android:layout_marginBottom="10dp">
+                </Button>
 
-    <Button
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/addButton"
-        android:onClick="addNewNote"
-        android:text="Add"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LinearLayout03"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_alignParentBottom="true">
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Start record"
+                    android:layout_weight="1"
+                    android:textSize="20sp"
+                    android:id="@+id/startRecord"
+                    android:onClick="startRecord"
+                    />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Stop record"
+                    android:layout_weight="1"
+                    android:textSize="20sp"
+                    android:id="@+id/stopRecord"
+                    android:onClick="stopRecord"
+                    />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/tagsButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Choose Tags"
+                android:onClick="chooseTags"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/chosenTags"
+                android:gravity="center"/>
+
+            <Button
+                android:id="@+id/timedNoteBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Timed note"
+                android:onClick="timedNote"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/chosenTimeTV"
+                android:gravity="center"/>
+
+            <Button
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/addButton"
+                android:onClick="addNewNote"
+                android:text="Add"/>
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

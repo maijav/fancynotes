@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,7 +51,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_card_item_contents);
         mDatabaseHelper = new DatabaseHelper(this);
         tvDesc = (TextView) findViewById(R.id.txtdesc);
-        img = (ImageView) findViewById(R.id.itemthumbnail);
+        img = (ImageView) findViewById(R.id.noteImage);
         tagsToDisplay = findViewById(R.id.tagsToDisplay);
         timeToDisplay = findViewById(R.id.timeToDisplay);
         stopAudio = (Button) findViewById(R.id.stopAudio);
@@ -121,9 +122,11 @@ public class CardItemContentsActivity extends AppCompatActivity {
         super.onStart();
 
         String imgString = getIntent().getExtras().getString("fi.example.fancynotes.imageUri");
-        if(imgString != null){
+        if(imgString != null && !imgString.isEmpty()){
             Uri image = Uri.parse(imgString);
             img.setImageURI(image);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(500,500);
+            img.setLayoutParams(params);
         }
     }
 
