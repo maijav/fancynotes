@@ -10,10 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -45,6 +48,8 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adap
         cardBackground = mData.get(position).getNoteBackground();
         int resID = mContext.getResources().getIdentifier(cardBackground , "drawable", mContext.getPackageName());
         holder.cardView.setBackgroundResource(resID);
+        String noteTitle = mData.get(position).getTitle();
+        holder.item_title.setText(noteTitle);
 
         //on click listener
 
@@ -77,14 +82,14 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adap
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView item_thumbnail;
+        TextView item_title;
         CardView cardView;
 
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-//            item_thumbnail = (ImageView) itemView.findViewById(R.id.img_id);
+            item_title = (TextView) itemView.findViewById(R.id.title_id);
             cardView = (CardView) itemView.findViewById(R.id.cardview_id);
         }
     }

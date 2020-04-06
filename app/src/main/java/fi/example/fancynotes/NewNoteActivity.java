@@ -294,6 +294,8 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
             dateToForward = sendForward.getTime();
                     Log.d("SHOULD", yearFinal +"");
         }
+
+        //Add data to SQLite database
         boolean insertData = mDatabaseHelper.addData(orderId,newEntryTitle, newEntryNote, noteBackground, imageUri, outputFileForAudio, tagsDialog.getSelectedTags(), dateToForward);
 
         if(insertData) {
@@ -313,10 +315,10 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         Log.d("NewNoteActivityAdd","works");
         String newEntryNote = editTextNote.getText().toString();
         String newEntryTitle = editTextTitle.getText().toString();
-        if(editTextNote.length() != 0) {
+        if(editTextNote.length() != 0 && editTextTitle.length() != 0) {
             addNote(newEntryTitle,newEntryNote);
         } else {
-            toastMessage("You must put something in the note field.");
+            toastMessage("You must put something in the note field and title field.");
         }
     }
 
@@ -379,6 +381,7 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
             usersPhoto.setImageURI(pickedImgUri);
         }
 
+        //If user has pressed back button
         if (resultCode == Activity.RESULT_CANCELED) {
             pickedImgUri = null;
         }
@@ -388,7 +391,7 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
             addImgLayout.addView(usersPhoto);
         }
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(500,500);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, 400);
         usersPhoto.setLayoutParams(params);
     }
 

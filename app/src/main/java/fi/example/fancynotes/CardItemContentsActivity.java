@@ -26,6 +26,8 @@ import androidx.appcompat.app.AppCompatActivity;
 public class CardItemContentsActivity extends AppCompatActivity {
 
     private TextView tvDesc;
+    private TextView tvTitle;
+    private TextView tvTags;
     private TextView tagsToDisplay;
     private TextView timeToDisplay;
     private TextView tagsText;
@@ -35,6 +37,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
     int orderId;
     String title;
     String description;
+    String dateS;
     Date time;
     private Intent intent;
 
@@ -52,9 +55,10 @@ public class CardItemContentsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_card_item_contents);
         mDatabaseHelper = new DatabaseHelper(this);
         tvDesc = (TextView) findViewById(R.id.txtdesc);
+        tvTitle = (TextView) findViewById(R.id.txtTitle);
         img = (ImageView) findViewById(R.id.noteImage);
         tagsToDisplay = findViewById(R.id.tagsToDisplay);
-        tagsText = findViewById(R.id.tagsText);
+        tvTags = findViewById(R.id.tagsText);
         timeToDisplay = findViewById(R.id.timeToDisplay);
         stopAudio = (Button) findViewById(R.id.stopAudio);
         startAudio = (Button) findViewById(R.id.startAudio);
@@ -70,7 +74,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
         title = intent.getExtras().getString("fi.example.fancynotes.title");
         outputFileForAudio = intent.getExtras().getString("fi.example.fancynotes.voiceUri");
         tags = intent.getExtras().getString("fi.example.fancynotes.tags");
-        String dateS = intent.getExtras().getString("fi.example.fancynotes.date");
+        dateS = intent.getExtras().getString("fi.example.fancynotes.date");
 
         Calendar date = Util.parseStringToCalendar(dateS);
         Log.d("DATEE", " asdkasodkasdo " + dateS + "");
@@ -81,11 +85,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
             stopAudio.setVisibility(View.GONE);
         }
 
-        if(tags == null) {
-            tagsToDisplay.setVisibility(View.GONE);
-            tagsText.setVisibility(View.GONE);
-        }
-
+        tvTitle.setText(title);
         tvDesc.setText(description);
         tagsToDisplay.setText(tags);
         if(!Util.parseDateToString(date.getTime()).contains("31-12-0002")) {
@@ -137,8 +137,18 @@ public class CardItemContentsActivity extends AppCompatActivity {
         if(imgString != null && !imgString.isEmpty()){
             Uri image = Uri.parse(imgString);
             img.setImageURI(image);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(500,500);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                    900);
             img.setLayoutParams(params);
+        }
+
+        //check what elements are shown in the layout
+        if(tags == null){
+            tvTags.setVisibility(View.GONE);
+            tagsToDisplay.setVisibility(View.GONE);
+        }
+        if(dateS == null){
+            timeToDisplay.setVisibility(View.GONE);
         }
     }
 

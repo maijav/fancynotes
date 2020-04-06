@@ -15,7 +15,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
 
             <ImageView
@@ -25,23 +25,38 @@
                 android:id="@+id/noteImage"
                 android:scaleType="centerCrop"/>
 
-            <Button
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Play Audio"
-                android:textSize="20sp"
-                android:id="@+id/startAudio"
-                android:onClick="startAudio"
-                />
+                android:orientation="horizontal">
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Play Audio"
+                    android:textSize="20sp"
+                    android:id="@+id/startAudio"
+                    android:onClick="startAudio"
+                    />
 
-            <Button
-                android:layout_width="match_parent"
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Stop Audio"
+                    android:textSize="20sp"
+                    android:id="@+id/stopAudio"
+                    android:onClick="stopAudio"
+                    />
+        </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtTitle"
+                android:textSize="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Stop Audio"
-                android:textSize="20sp"
-                android:id="@+id/stopAudio"
-                android:onClick="stopAudio"
-                />
+                android:text="Title"/>
 
             <TextView
                 android:id="@+id/txtdesc"
@@ -73,19 +88,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <Button
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/edit"
-                android:text="Edit"
-                android:onClick="editNote"/>
+                android:orientation="horizontal">
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/edit"
+                    android:text="Edit"
+                    android:onClick="editNote"/>
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/delete"
-                android:text="Delete"
-                android:onClick="deleteNote"/>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/delete"
+                    android:text="Delete"
+                    android:onClick="deleteNote"/>
+            </LinearLayout>
 
         </LinearLayout>
 
