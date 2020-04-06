@@ -32,12 +32,10 @@ public class TagsDialog extends AlertDialog {
         addTags();
         Log.d("GOTHERE", context.getClass().toString());
         if(context.getClass().toString().contains("EditNoteActivity")) {
-
             chosenTags = (TextView) ((Activity)context).findViewById(R.id.chosenNewTags);
         } else {
             chosenTags = (TextView) ((Activity)context).findViewById(R.id.chosenTags);
         }
-
     }
 
     public String getSelectedTags() {
@@ -71,7 +69,6 @@ public class TagsDialog extends AlertDialog {
     }
 
     public void chooseTags() {
-
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
         mBuilder.setTitle("Tags available to choose from");
         if(tagsArray.length > 0) {
@@ -96,7 +93,6 @@ public class TagsDialog extends AlertDialog {
                     tagsToBeAdded = tagsToBeAdded + tagsArray[mSelectedTags.get(i)];
                     if(i != mSelectedTags.size() - 1) {
                         tagsToBeAdded +=",";
-
                     }
                 }
                 chosenTags.setText(tagsToBeAdded);
@@ -127,6 +123,7 @@ public class TagsDialog extends AlertDialog {
                 createNewTag();
             }
         });
+
         AlertDialog mDialog = mBuilder.create();
         mDialog.show();
     }
@@ -162,6 +159,9 @@ public class TagsDialog extends AlertDialog {
                     updateTagsPrefs("tag"+i, tagsArray[i]);
                 }
                 updateTagsPrefs("tagArray-length", tagsArray.length +"");
+                mSelectedTags.add(tagsArray.length -1);
+                checkedTags[checkedTags.length -1] = true;
+                chooseTags();
             }
         });
 
