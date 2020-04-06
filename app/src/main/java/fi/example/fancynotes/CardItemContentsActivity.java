@@ -88,7 +88,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
         tvTitle.setText(title);
         tvDesc.setText(description);
         tagsToDisplay.setText(tags);
-        if(!Util.parseDateToString(date.getTime()).contains("31-12-0002")) {
+        if(date != null) {
             timeToDisplay.setText(Util.parseDateToString(date.getTime()));
         } else {
             timeToDisplay.setVisibility(View.GONE);

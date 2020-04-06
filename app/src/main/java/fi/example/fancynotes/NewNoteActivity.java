@@ -289,10 +289,10 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         Date dateToForward;
         if(yearFinal == 0) {
             dateToForward = null;
-        }
-        else  {
+            Log.d("SHOULD", yearFinal +"");
+        } else  {
             dateToForward = sendForward.getTime();
-                    Log.d("SHOULD", yearFinal +"");
+            Log.d("SHOULD", yearFinal +"");
         }
 
         //Add data to SQLite database

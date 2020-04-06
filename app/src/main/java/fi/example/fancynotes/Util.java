@@ -13,20 +13,25 @@ public class Util {
 
     public static String parseDateToString(Date date) {
         String dateS = dateFormat.format(date);
-        Log.d("DATEE", " PARSE DATE TO STRING DATES " +  dateS);
+        Log.d("DATEE", " PARSE DATE TO STRING DATES " + dateS);
         return dateS;
     }
 
     public static Calendar parseStringToCalendar(String dateS) {
-        Log.d("DATEE", " PARSE STRING TO CALENDAR " +  dateS);
+        Log.d("DATEE", " PARSE STRING TO CALENDAR " + dateS);
         Calendar date = Calendar.getInstance();
         Date d = new Date();
-        try {
-            d = dateFormat.parse(dateS);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (dateS != null) {
+            try {
+                d = dateFormat.parse(dateS);
+                date.setTime(d);
+                return date;
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
-        date.setTime(d);
-       return date;
+        return null;
     }
+
 }

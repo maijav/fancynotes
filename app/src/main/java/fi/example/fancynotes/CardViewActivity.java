@@ -91,8 +91,15 @@ public class CardViewActivity extends AppCompatActivity{
             String dateS = data.getString(8);
             Log.d("noteDATA", id + title + text + dateS);
             Log.d("ORDERID", orderId + " from cardview");
+            Calendar date;
+            if(dateS != null) {
+                date = Util.parseStringToCalendar(dateS);
+                Log.d("DATES", dateS + " from cardview");
+            } else {
+                date = null;
+                Log.d("DATES", date + " from cardview");
+            }
 
-            Calendar date = Util.parseStringToCalendar(dateS);
 //            Log.d("noteDATA", id + title + text);
             noteList.add(new Note(id, orderId, title, text, backGround, imageUri, voiceUri, tags, date));
         }
