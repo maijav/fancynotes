@@ -28,6 +28,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
     private TextView tvDesc;
     private TextView tagsToDisplay;
     private TextView timeToDisplay;
+    private TextView tagsText;
     private ImageView img;
     DatabaseHelper mDatabaseHelper;
     int id;
@@ -53,6 +54,7 @@ public class CardItemContentsActivity extends AppCompatActivity {
         tvDesc = (TextView) findViewById(R.id.txtdesc);
         img = (ImageView) findViewById(R.id.noteImage);
         tagsToDisplay = findViewById(R.id.tagsToDisplay);
+        tagsText = findViewById(R.id.tagsText);
         timeToDisplay = findViewById(R.id.timeToDisplay);
         stopAudio = (Button) findViewById(R.id.stopAudio);
         startAudio = (Button) findViewById(R.id.startAudio);
@@ -79,9 +81,19 @@ public class CardItemContentsActivity extends AppCompatActivity {
             stopAudio.setVisibility(View.GONE);
         }
 
+        if(tags == null) {
+            tagsToDisplay.setVisibility(View.GONE);
+            tagsText.setVisibility(View.GONE);
+        }
+
         tvDesc.setText(description);
         tagsToDisplay.setText(tags);
-        timeToDisplay.setText(Util.parseDateToString(date.getTime()));
+        if(!Util.parseDateToString(date.getTime()).contains("31-12-0002")) {
+            timeToDisplay.setText(Util.parseDateToString(date.getTime()));
+        } else {
+            timeToDisplay.setVisibility(View.GONE);
+        }
+
     }
 
     public void startAudio(View v) {
@@ -138,7 +150,9 @@ public class CardItemContentsActivity extends AppCompatActivity {
         newIntent.putExtra("fi.example.fancynotes.orderid", orderId);
         newIntent.putExtra("fi.example.fancynotes.title", title);
         newIntent.putExtra("fi.example.fancynotes.tags", tags);
-        newIntent.putExtra("fi.example.fancynotes.date", time.toString());
+        if(time != null) {
+            newIntent.putExtra("fi.example.fancynotes.date", time.toString());
+        }
         startActivity(newIntent);
     }
 

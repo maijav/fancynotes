@@ -61,7 +61,9 @@ public class EditNoteActivity extends AppCompatActivity {
         editTextTitle.setText(title);
 
         tagsDialog = new TagsDialog(this);
-        tagsDialog.updateTagsOnLoad(tags);
+        if(tags != null) {
+            tagsDialog.updateTagsOnLoad(tags);
+        }
         chosenNewTags.setText(tags);
 
     }

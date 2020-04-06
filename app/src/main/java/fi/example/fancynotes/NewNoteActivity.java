@@ -286,7 +286,15 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
             startTimedNoteWorker(sendForward.getTime());
         }
 
-        boolean insertData = mDatabaseHelper.addData(orderId,newEntryTitle, newEntryNote, noteBackground, imageUri, outputFileForAudio, tagsDialog.getSelectedTags(), sendForward.getTime());
+        Date dateToForward;
+        if(yearFinal == 0) {
+            dateToForward = null;
+        }
+        else  {
+            dateToForward = sendForward.getTime();
+                    Log.d("SHOULD", yearFinal +"");
+        }
+        boolean insertData = mDatabaseHelper.addData(orderId,newEntryTitle, newEntryNote, noteBackground, imageUri, outputFileForAudio, tagsDialog.getSelectedTags(), dateToForward);
 
         if(insertData) {
             toastMessage("Data successfully Inserted");

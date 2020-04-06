@@ -66,8 +66,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL5, imageUri);
         contentValues.put(COL6, audioUri);
         contentValues.put(COL7, tags);
-        contentValues.put(COL8, Util.parseDateToString(timedDate));
-        Log.d("DATEE", " DATABASEHELPER FORMAT DATE " +  Util.parseDateToString(timedDate));
+        if(timedDate != null) {
+            contentValues.put(COL8, Util.parseDateToString(timedDate));
+            Log.d("DATEE", " DATABASEHELPER FORMAT DATE " +  Util.parseDateToString(timedDate));
+        } else {
+            contentValues.put(COL8, "null");
+        }
 
         Log.d(TAG, "addData: Adding" + orderId + " to " + TABLE_NAME);
         Log.d(TAG, "addData: Adding" + title + " to " + TABLE_NAME);
