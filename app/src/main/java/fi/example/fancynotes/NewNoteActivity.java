@@ -110,8 +110,7 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         imageUri = null;
         usersPhoto = new ImageView(this);
 
-        addImgBtn = new Button(this);
-        addImgBtn.setText("add image");
+        addImgBtn = findViewById(R.id.addImgBtn);
 
         addImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +119,7 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
             }
         });
 
-        addImgLayout.addView(addImgBtn);
+//        addImgLayout.addView(addImgBtn);
         tagsDialog = new TagsDialog(this);
     }
 
@@ -329,6 +328,9 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
                 break;
             case R.id.pinkNote:
                 noteBackground = "note_placeholder";
+                break;
+            case R.id.yellowNote:
+                noteBackground = "note_placeholder3";
                 break;
             default:
             throw new RuntimeException("Unknow button ID");
