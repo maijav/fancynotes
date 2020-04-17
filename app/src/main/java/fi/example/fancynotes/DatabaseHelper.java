@@ -7,6 +7,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -53,6 +54,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+    }
+
+    public Toast removeAllData(Context context) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from "+ TABLE_NAME);
+        Toast toast = Toast.makeText(context, "All data has been deleted", Toast.LENGTH_LONG);
+        return toast;
     }
 
     public boolean addData(int orderId, String title, String note, String background, String imageUri, String audioUri, String tags, Date timedDate) {

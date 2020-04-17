@@ -94,6 +94,8 @@ public class MainActivity extends AppCompatActivity{
         switch (item.getItemId()){
             case R.id.settingsMenu:
                 Log.d("MENUTEST", "settings");
+                SettingsDialog dialog = new SettingsDialog();
+                dialog.show(getSupportFragmentManager(), "settingsDialog");
                 return true;
             case R.id.fetchMenu:
                 onClick();
