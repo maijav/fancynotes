@@ -2,6 +2,7 @@ package fi.example.fancynotes;
 
 import android.app.Service;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.JsonReader;
@@ -26,6 +27,7 @@ public class MyService extends Service {
     long id;
     String title;
     String  text;
+    DatabaseHelper mDatabaseHelper;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -34,6 +36,7 @@ public class MyService extends Service {
 
     public int onStartCommand(Intent i, int flags, int startId){
         Log.d("jepajee", "jepajee");
+        mDatabaseHelper = new DatabaseHelper(this);
         t = new Thread(() -> {
             doThis();
         });
@@ -48,10 +51,15 @@ public class MyService extends Service {
         try {
             value = downloadUrl();
             JSONArray jsonArray = new JSONArray(value);
-            jsonObject = (JSONObject) jsonArray.get(0);
-            id = jsonObject.getLong("id");
-            title = jsonObject.getString("title");
-            text = jsonObject.getString("text");
+            for(int i = 0; i < jsonArray.length(); i++) {
+                jsonObject = (JSONObject) jsonArray.get(i);
+                id = jsonObject.getLong("id");
+                title = jsonObject.getString("title");
+                text = jsonObject.getString("text");
+
+                mDatabaseHelper.addData(Util.getNewOrderId(this), title, text,"note_placeholder2",null,"No Audio",null,null);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {

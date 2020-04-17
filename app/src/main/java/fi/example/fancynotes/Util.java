@@ -1,5 +1,7 @@
 package fi.example.fancynotes;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.util.Log;
 
 import java.io.Console;
@@ -10,7 +12,7 @@ import java.util.Date;
 
 public class Util {
     static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-
+    static DatabaseHelper mDatabaseHelper;
     public static String parseDateToString(Date date) {
         String dateS = dateFormat.format(date);
         Log.d("DATEE", " PARSE DATE TO STRING DATES " + dateS);
@@ -32,6 +34,26 @@ public class Util {
             }
         }
         return null;
+    }
+
+    public static int getNewOrderId(Context context) {
+        mDatabaseHelper = new DatabaseHelper(context);
+        Cursor data = mDatabaseHelper.getLatestInOrder();
+
+        int orderIdFromData = 0;
+        while(data.moveToNext()){
+            orderIdFromData = data.getInt(1);
+        }
+        int orderId = orderIdFromData;
+
+        if(orderId == 0) {
+            Log.d("ORDERIDD", orderId + " UTIL 1");
+            return 1;
+        } else {
+            orderId++;
+            Log.d("ORDERIDD", orderId + " UTIL");
+            return orderId;
+        }
     }
 
 }

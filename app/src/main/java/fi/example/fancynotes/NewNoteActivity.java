@@ -249,23 +249,7 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
     }
 
     public void addNote(String newEntryTitle, String newEntryNote) {
-        Cursor data = mDatabaseHelper.getLatestInOrder();
-        int orderIdFromData = 0;
-        while(data.moveToNext()){
-            orderIdFromData = data.getInt(1);
-            Log.d("ORDERID", orderIdFromData + " DATANEXT");
-        }
-
-        orderId = orderIdFromData;
-        Log.d("ORDERID", orderId + " found from db");
-        if(orderId == 0) {
-            orderId = 1;
-            Log.d("ORDERID", orderId + " new one first note");
-        } else {
-            orderId++;
-            Log.d("ORDERID", orderId + " new one not first note");
-        }
-
+        orderId = Util.getNewOrderId(this);
         if(pickedImgUri != null){
             imageUri = pickedImgUri.toString();
             pickedImgUri = null;
