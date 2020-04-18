@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -28,5 +29,9 @@ public class clippyDialog extends AppCompatActivity {
         ObjectAnimator moveRightImg = ObjectAnimator.ofFloat(clippy, "translationX", 200f, 40f);
         moveRightImg.setDuration(1500);
         moveRightImg.start();
+    }
+
+    public void closeClippy(View v){
+        this.finish();
     }
 }

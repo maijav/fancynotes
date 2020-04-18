@@ -9,6 +9,7 @@
         android:id="@+id/clippy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="closeClippy"
         android:background="@android:color/transparent"
         android:orientation="vertical">
 
@@ -16,7 +17,7 @@
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/clippy2" />
+            android:src="@drawable/clippy3" />
 
     </LinearLayout>
 </RelativeLayout>
