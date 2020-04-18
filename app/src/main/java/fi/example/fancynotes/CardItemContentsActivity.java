@@ -1,6 +1,9 @@
 package fi.example.fancynotes;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -22,8 +25,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-public class CardItemContentsActivity extends AppCompatActivity {
+public class CardItemContentsActivity extends AppCompatActivity implements DeleteDialog.OnDialogDismissListener{
 
     private TextView tvDesc;
     private TextView tvTitle;
@@ -167,7 +171,11 @@ public class CardItemContentsActivity extends AppCompatActivity {
     }
 
     public void deleteNote(View view) {
+        DeleteDialog dialog = new DeleteDialog();
+        dialog.show(getSupportFragmentManager(), "settingsDialog");
+    }
 
+    private void removeNote() {
         int deleteData = mDatabaseHelper.deleteNote(id);
         if(deleteData == 1) {
             toastMessage("Data successfully deleted");
@@ -187,7 +195,13 @@ public class CardItemContentsActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+
     private void toastMessage(String message) {
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDialogDismissListener() {
+        removeNote();
     }
 }
