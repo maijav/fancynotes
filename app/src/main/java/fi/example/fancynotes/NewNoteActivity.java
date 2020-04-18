@@ -7,6 +7,8 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.database.Cursor;
@@ -122,7 +124,12 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
 
 //        addImgLayout.addView(addImgBtn);
         tagsDialog = new TagsDialog(this);
+
+        Intent clippyIntent = new Intent(this, clippyDialog.class);
+        startActivity(clippyIntent);
     }
+
+
 
     public void chooseTags(View v) {
         tagsDialog.chooseTags();

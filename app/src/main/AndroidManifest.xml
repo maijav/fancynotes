@@ -27,6 +27,8 @@
         <activity android:name=".CardItemContentsActivity"/>
         <activity android:name=".EditNoteActivity"/>
         <service android:name=".MyService"/>
+        <activity android:name=".clippyDialog"
+            android:theme="@style/clippy" />
         <provider
             android:name=".GenericFileProvider"
             android:authorities="com.example.android.fileprovider"
