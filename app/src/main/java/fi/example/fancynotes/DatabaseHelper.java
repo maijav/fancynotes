@@ -44,10 +44,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //Column 8
     private static final String COL8 = "time";
 
+    /**
+     * The constructor of the DatabaseHelper class that requires current context to update information in the database.
+     * User super to make the table
+     * @param context the current context of the app.
+     */
     public DatabaseHelper(Context context) {
         super(context,TABLE_NAME,null,1 );
     }
 
+    /**
+     * Lifecycle method on create to create a new table with the wanted columns.
+     * @param db the SQLite database
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
             String createTable = "CREATE TABLE " + TABLE_NAME + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -58,11 +67,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(createTable);
     }
 
+    /**
+     * Lifecycle method.
+     * @param db database
+     * @param i i
+     * @param i1 i1
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
     }
 
+    /**
+     * Method is used to remove all of the data in the database.
+     * @param context the current context.
+     * @return a toast message to inform the user that all data has been deleted from the database.
+     */
     public Toast removeAllData(Context context) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from "+ TABLE_NAME);
@@ -70,6 +90,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return toast;
     }
 
+    /**
+     * Method is used to add new notes to the database with all of the needed info and return true or false if the adding was successful.
+     * @param orderId the orderid of the new note
+     * @param title the tittle of the new note
+     * @param note the text of the new note
+     * @param background the background color of the new note
+     * @param imageUri the uri of the new note image
+     * @param audioUri the audio uri of the new note
+     * @param tags the tags of the new note
+     * @param timedDate the timed note of the new note
+     * @return true or false if the adding was successful
+     */
     public boolean addData(int orderId, String title, String note, String background, String imageUri, String audioUri, String tags, Date timedDate) {
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -97,6 +129,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * Method is used to update the order id of a note whenever needed.
+     * @param ID the old id of the note
+     * @param newOrderId the new id of the note
+     * @return true when the new order has been successfully set
+     */
     public boolean updateOrderId (Integer ID, Integer newOrderId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -106,6 +144,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * Method is used to return all of the data in the database to be displayed.
+     * @return Cursor with all of the notes in the data. The data is ordered by OrderID.
+     */
     public Cursor getAllData() {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + COL1 + " DESC";
@@ -113,12 +155,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return data;
     }
 
+    /**
+     * Method is used to get the latest note in the current order to set a new order id for new note upon creation.
+     * @return the Cursor info of the last note created.
+     */
     public Cursor getLatestInOrder() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from " + TABLE_NAME + " WHERE " + COL1 + " = (SELECT MAX(" + COL1 +") from " + TABLE_NAME + ") order by " + COL1 + " ASC LIMIT 1" , null );
         return res;
     }
 
+    /**
+     * Method used to delete a note based on id from the database.
+     * @param id the id of the note that is wanted to be deleted
+     * @return if the deletion was succesfull return positive number if not return negative
+     */
     public Integer deleteNote (Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_NAME,
@@ -126,12 +177,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[] { Integer.toString(id) });
     }
 
+    /**
+     * Method used to update the SQLite database note.
+     * @param id the id of the note
+     * @param title the tittle of the note
+     * @param note the text of the note
+     * @param tags the tags of the note
+     * @return
+     */
     public boolean updateNote (Integer id, String title, String note, String tags) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL2, title);
         contentValues.put(COL3, note);
         contentValues.put(COL7, tags);
+        //update based on id
         db.update(TABLE_NAME, contentValues, "id = ? ", new String[] { Integer.toString(id) } );
         return true;
     }
