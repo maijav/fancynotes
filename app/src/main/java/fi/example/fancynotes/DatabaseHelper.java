@@ -3,20 +3,27 @@ package fi.example.fancynotes;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+
+/**
+ * The DatabaseHelper class is used to store the SQLite database and edit it.
+ *
+ * Via the DatabaseHelper class each note can be created, updated and deleted according to needed attributes.
+ * This class is used all over the project and it is used to edit and manage one table named notes_table.
+ *
+ * @author Hanna Tuominen
+ * @author Maija Visala
+ * @version 3.0
+ * @since 2020-03-09
+ */
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "DatabaseHelper";
+    //Table name
     private static final String TABLE_NAME = "notes_table";
     //Column 0
     private static final String COL0 = "ID";
@@ -76,15 +83,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL7, tags);
         if(timedDate != null) {
             contentValues.put(COL8, Util.parseDateToString(timedDate));
-            Log.d("DATEE", " DATABASEHELPER FORMAT DATE " +  Util.parseDateToString(timedDate));
         } else {
             contentValues.put(COL8, "null");
         }
-
-        Log.d(TAG, "addData: Adding" + orderId + " to " + TABLE_NAME);
-        Log.d(TAG, "addData: Adding" + title + " to " + TABLE_NAME);
-        Log.d(TAG, "addData: Adding" + note + " to " + TABLE_NAME);
-        Log.d(TAG, "addData: Adding" + background + " to " + TABLE_NAME);
         // -1 if not inserted correctly
         long result = db.insert(TABLE_NAME, null, contentValues);
 
@@ -112,41 +113,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return data;
     }
 
-    public Cursor getDataById(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from "+ TABLE_NAME +" where id="+id+"", null );
-        return res;
-    }
-
     public Cursor getLatestInOrder() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from " + TABLE_NAME + " WHERE " + COL1 + " = (SELECT MAX(" + COL1 +") from " + TABLE_NAME + ") order by " + COL1 + " ASC LIMIT 1" , null );
         return res;
     }
 
-    public int numberOfRows(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        int numRows = (int) DatabaseUtils.queryNumEntries(db, TABLE_NAME);
-        return numRows;
-    }
     public Integer deleteNote (Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_NAME,
                 "id = ? ",
                 new String[] { Integer.toString(id) });
-    }
-
-    public ArrayList<String> getAllDataInStringArrayList() {
-        ArrayList<String> listData = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from " + TABLE_NAME, null );
-        res.moveToFirst();
-
-        while(res.isAfterLast() == false){
-            listData.add(res.getString(res.getColumnIndex(COL2)));
-            res.moveToNext();
-        }
-        return listData;
     }
 
     public boolean updateNote (Integer id, String title, String note, String tags) {
