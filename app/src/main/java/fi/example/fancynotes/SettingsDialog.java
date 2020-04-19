@@ -14,7 +14,7 @@ import androidx.fragment.app.DialogFragment;
 
 import static android.content.Context.MODE_PRIVATE;
 /**
- * The SettingsDIalog class is used to create a new settings dialog prompted by clicking the settings
+ * The SettingsDialog class is used to create a new settings dialog prompted by clicking the settings
  *  button in the MainMenu in MainActivity.
  *
  * The Dialog shows the user the current settings of the notifications and a button to reset the application.
