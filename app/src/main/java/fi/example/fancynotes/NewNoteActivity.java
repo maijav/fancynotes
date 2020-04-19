@@ -56,7 +56,7 @@ import android.text.format.DateFormat;
  *
  * @author  Hanna Tuominen
  * @author  Maija Visala
- * @version 1.15
+ * @version 3.0
  * @since   2020-03-09
  */
 
