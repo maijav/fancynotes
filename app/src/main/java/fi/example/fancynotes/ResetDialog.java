@@ -7,8 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class ResetDialog extends DialogFragment {
@@ -37,7 +40,13 @@ public class ResetDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 mDatabaseHelper.removeAllData(getContext());
+                sharedPreferences = getActivity().getSharedPreferences("settings", MODE_PRIVATE);
+                sharedPreferences.edit().clear().commit();
+
+                sharedPreferences = getActivity().getSharedPreferences("tags", MODE_PRIVATE);
+                sharedPreferences.edit().clear().commit();
                 Log.d("SettingsDialog","Settings reset: ");
+                Toast.makeText(getContext(),"The application has been reset.",Toast.LENGTH_SHORT).show();
                 getDialog().dismiss();
             }
         });

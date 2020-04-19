@@ -7,11 +7,8 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.media.MediaRecorder;
 import android.net.Uri;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -20,7 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -44,6 +40,25 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
 import android.text.format.DateFormat;
+
+/**
+ * The NewNoteActivity class is used in creation of new notes for the application.
+ *
+ * The class is used by the mainActivity when user wishes to create a new note for the app.
+ * In this class the user has the possibility to write the mandatory tittle and note text for the new note.
+ * The user also has the possibility to add pictures, audio, tags and choose the color of their note
+ * along with the possibility to make the note into a timed note which will prompt a push notification when
+ * the picked time has arrived. The timed note can only be added if the user has the notification settings on.
+ *
+ * When user has chosen everything they need for the note they can press the 'add' button which
+ * redirects the user to the cardViewActivity where the created new note is displayed after the
+ * note has been saved to the SQLite backend.
+ *
+ * @author  Hanna Tuominen
+ * @author  Maija Visala
+ * @version 1.15
+ * @since   2020-03-09
+ */
 
 public class NewNoteActivity extends AppCompatActivity implements CameraDialog_Fragment.NoticeDialogListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     DatabaseHelper mDatabaseHelper;
@@ -143,7 +158,6 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
 
     public void chooseTags(View v) {
         tagsDialog.chooseTags();
-
     }
 
     //Ask user, if they want to use phone camera or pick image from phone gallery
@@ -453,6 +467,14 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         return diffInMillies;
     }
 
+    /**
+     * UpdateSettingsPrefs is a method used when the settings preferences need to be updated.
+     *
+     * It is used when the clippy has been showed the first time and it should not be shown again.
+     *
+     * @param field the name of the shared preference item to be saved
+     * @param value the value of the shared preference item to be saved
+     */
 
     private void updateSettingsPrefs(String field, Boolean value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -460,6 +482,16 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         editor.apply();
     }
 
+    /**
+     * getSettingsPrefs if used to get the 'settings' preferences that are needed such as
+     * the clippy and notification settings.
+     *
+     * These settings are used to either show clippy or don't show it or for the user to have
+     * possibility to make timed notes.
+     *
+     * @param field the wanted name for the boolean shared preferences
+     * @return returns the wanted boolean value based on the field attribute
+     */
     private Boolean getSettingsPrefs(String field) {
         return sharedPreferences.getBoolean(field, false);
     }
