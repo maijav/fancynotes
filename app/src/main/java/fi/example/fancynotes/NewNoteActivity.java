@@ -86,6 +86,9 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newnote);
+
+        sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE);
+
         addBtn = (Button) findViewById(R.id.addButton);
         editTextNote = (EditText) findViewById(R.id.newNoteEditText);
         editTextTitle = (EditText) findViewById(R.id.newTitleEditText);
@@ -95,6 +98,11 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         chosenTags = findViewById(R.id.chosenTags);
 
         timedNoteBtn = findViewById(R.id.timedNoteBtn);
+        if(getSettingsPrefs("notif")){
+            timedNoteBtn.setEnabled(false);
+            timedNoteBtn.setBackgroundColor(getResources().getColor(R.color.colorlightGray));
+        }
+
         chosenTimeTV = findViewById(R.id.chosenTimeTV);
 
         stopRecord = (Button) findViewById(R.id.stopRecord);
@@ -106,7 +114,6 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         if(!checkPermissionFromDevice()) {
             requestPermission();
         }
-        sharedPreferences = getSharedPreferences("tags", MODE_PRIVATE);
 
         mDatabaseHelper = new DatabaseHelper(this);
         noteBackground = "note_placeholder";
@@ -125,8 +132,11 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
 //        addImgLayout.addView(addImgBtn);
         tagsDialog = new TagsDialog(this);
 
-        Intent clippyIntent = new Intent(this, clippyDialog.class);
-        startActivity(clippyIntent);
+        if(!getSettingsPrefs("clippy")){
+            Intent clippyIntent = new Intent(this, clippyDialog.class);
+            startActivity(clippyIntent);
+            updateSettingsPrefs("clippy", true);
+        }
     }
 
 
@@ -273,7 +283,6 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
 
         //Check if user has chosen timed note and if so, start worker for notification
         if(yearFinal != 0) {
-            Log.d("NOTIFIKAATIO", "notif1");
             startTimedNoteWorker(sendForward.getTime());
         }
 
@@ -425,8 +434,6 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         final String workTag = "notificationWork";
 
         long dateDiffInMills = calculateDelay(date);
-        Log.d("NOTIFIKAATIO", "" + dateDiffInMills);
-//        dateDiffInMills = 60000;
         OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotificationWorker.class)
                 .setInitialDelay(dateDiffInMills, TimeUnit.MILLISECONDS)
                 .addTag(workTag)
@@ -444,6 +451,17 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
     public static long getDateDiff(Date date1, Date date2) {
         long diffInMillies = date1.getTime() - date2.getTime();
         return diffInMillies;
+    }
+
+
+    private void updateSettingsPrefs(String field, Boolean value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(field, value);
+        editor.apply();
+    }
+
+    private Boolean getSettingsPrefs(String field) {
+        return sharedPreferences.getBoolean(field, false);
     }
 
 }

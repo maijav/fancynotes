@@ -36,6 +36,11 @@ public class SettingsDialog extends DialogFragment {
         allowNotif = view.findViewById(R.id.allowNotif);
         dontAllowNotif = view.findViewById(R.id.dontAllowNotif);
         radioGroup = view.findViewById(R.id.radio);
+        if(!getSettingsPrefs("notif")){
+            allowNotif.setChecked(true);
+        }else{
+            dontAllowNotif.setChecked(true);
+        }
         resetApp = view.findViewById(R.id.reset_app);
 
 
@@ -49,9 +54,9 @@ public class SettingsDialog extends DialogFragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
                 if (checkedId == R.id.allowNotif) {
-                    allowNotifPicked = true;
-                } else if (checkedId == R.id.dontAllowNotif) {
                     allowNotifPicked = false;
+                } else if (checkedId == R.id.dontAllowNotif) {
+                    allowNotifPicked = true;
                 }
 
             }
@@ -91,7 +96,7 @@ public class SettingsDialog extends DialogFragment {
     }
 
     private Boolean getSettingsPrefs(String field) {
-        return sharedPreferences.getBoolean(field, true);
+        return sharedPreferences.getBoolean(field, false);
     }
 
 }
