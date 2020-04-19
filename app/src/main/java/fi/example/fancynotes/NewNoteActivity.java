@@ -275,7 +275,7 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         hourFinal = i;
         minuteFinal = i1;
 
-        chosenTimeTV.setText( " Day: " + dayFinal + " Month: " + monthFinal + " Year: " + yearFinal +  " Hour: " + hourFinal + " Minutes: " + minuteFinal);
+        chosenTimeTV.setText( dayFinal + "-" + monthFinal + "-" + yearFinal +  " " + hourFinal + ":" + minuteFinal);
 
     }
 
@@ -413,7 +413,14 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
     }
 
 
-
+    /**
+     * onBackPressed method is used to redirect the user to the main activity upon clicking the
+     * back button on their phone.
+     *
+     * When user clicks the back button on their phone the method checks if the user has been recording
+     * a new audio note and removes it from the memory and then it redirects the user from NewNoteActivity
+     * to the MainActivity.
+     */
     @Override
     public void onBackPressed() {
         if(hasRecorded) {
@@ -483,7 +490,7 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
     }
 
     /**
-     * getSettingsPrefs if used to get the 'settings' preferences that are needed such as
+     * getSettingsPrefs is used to get the 'settings' preferences that are needed such as
      * the clippy and notification settings.
      *
      * These settings are used to either show clippy or don't show it or for the user to have
