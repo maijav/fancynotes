@@ -5,35 +5,45 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+/**
+ * Worker for triggering notification on selected point of time.
+ *
+ * @author  Maija Visala
+ * @version 3.0
+ * @since   2020-03-09
+ */
 public class NotificationWorker extends Worker {
     String CHANNEL_ID;
 
+    /**
+     * Constructor for NotificationWorker.
+     * @param context application context.
+     * @param params parameters that enable modification of the worker.
+     */
     public NotificationWorker(@NonNull Context context, @NonNull WorkerParameters params) {
         super(context, params);
-        Log.d("NOTIFIKAATIO", "worker");
     }
 
+    /**
+     * Called when worker is ready to trigger desired task.
+     * @return Result tells WorkManager if task should be done again later or not.
+     */
     @NonNull
     @Override
     public Result doWork() {
-        // Method to trigger an instant notification
         triggerNotification();
-
         return Result.success();
-        // (Returning RETRY tells WorkManager to try this task again
-        // later; FAILURE says not to try again.)
     }
 
+    /**
+     * Build and trigger a notification. Notification texts are specified in strings.xml.
+     */
     public void triggerNotification() {
-        Log.d("NOTIFIKAATIO", "notif2");
-
         CHANNEL_ID = "Notification";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getApplicationContext().getResources().getString(R.string.channel_name);
