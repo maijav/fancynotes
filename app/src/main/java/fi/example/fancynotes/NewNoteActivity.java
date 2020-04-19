@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -97,6 +96,10 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
     int dayFinal, monthFinal, yearFinal, hourFinal, minuteFinal;
     Calendar sendForward;
 
+    /**
+     * Lifecycle method for building the initial state of the activity.
+     * @param savedInstanceState bundle object that is passed into method (used for restoring state if needed).
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -144,7 +147,6 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
             }
         });
 
-//        addImgLayout.addView(addImgBtn);
         tagsDialog = new TagsDialog(this);
 
         if(!getSettingsPrefs("clippy")){
@@ -153,7 +155,6 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
             updateSettingsPrefs("clippy", true);
         }
     }
-
 
     /**
      * Method is called when user clicks the choose tags button in the xml.
@@ -165,13 +166,19 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         tagsDialog.chooseTags();
     }
 
-    //Ask user, if they want to use phone camera or pick image from phone gallery
+    /**
+     * Dialog for asking user, if they want to use phone camera or pick image from phone gallery.
+     */
     public void showCameraDialog() {
         DialogFragment dialog = new CameraDialog_Fragment();
         dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
     }
 
-    //Get input for camera dialog
+    /**
+     * Get input from showCameraDialog. Either opens phone gallery or phone camera.
+     * If user wants to open phone camera, method checks if phone has camera or not.
+     * @param input the choice user has made in showCameraDialog.
+     */
     @Override
     public void sendChoice(String input) {
         if(input.equals("Phone gallery")){
@@ -279,7 +286,6 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         } else {
             requestPermission();
         }
-
     }
 
     /**
@@ -414,6 +420,10 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         }
     }
 
+    /**
+     * User can choose a background image for their note. User's choice is saved to SQLite.
+     * @param v the view from xml.
+     */
     public void chooseNoteBackground(View v) {
         switch (v.getId()) {
             case R.id.blueNote:
@@ -430,7 +440,9 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         }
     }
 
-    //User can choose image from phone gallery
+    /**
+     * Open phone gallery after user has chosen to add image from phone gallery.
+     */
     private void openGallery() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -438,9 +450,10 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), ImageRequestCode);
     }
 
-    //User can take images with phone camera
+    /**
+     * Open phone camera after user has chosen to take picture with camera. New image file is created and sent forward.
+     */
     public void openCamera(){
-
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
@@ -450,7 +463,6 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
             } catch (IOException ex) {
             }
             if (photoFile != null) {
-
                 pickedImgUri = FileProvider.getUriForFile(this,
                         "com.example.android.fileprovider",
                         photoFile);
@@ -461,17 +473,22 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         }
     }
 
-    //After user has chosen image from gallery
+    /**
+     * Method is called after user has picked image from phone gallery or taken image with phone camera. Reference
+     * to image is saved to a Uri variable.
+     * @param  requestCode check which activity is sending data
+     * @param  resultCode check that sent result is valid
+     * @param  data data that is passed to result method (this method)
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        //phone gallery result
         if (resultCode == RESULT_OK && requestCode == ImageRequestCode && data != null){
-            //the user has picked an image from phone gallery
-            //reference to image is saved to a Uri variable
-
             pickedImgUri = data.getData();
             usersPhoto.setImageURI(pickedImgUri);
+        //phone camera result
         }else if (requestCode == ImageCaptureRequestCode && resultCode == RESULT_OK) {
             usersPhoto.setImageURI(pickedImgUri);
         }
@@ -512,21 +529,31 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         finish();
     }
 
+    /**
+     * Called when image file is created (after user has chosen to take picture with phone camera).
+     * Image name is "JPEG_ + point of time when file was created + _".
+     * @return created image file
+     */
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
+                imageFileName,
+                ".jpg",
+                storageDir
         );
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
-    //Start worker to trigger notification on selected point of time
+    /**
+     * Start worker to trigger notification on selected point of time.
+     * Method takes the difference between current time and selected time and sends it to
+     * worker for setting delay of notification.
+     * @param  date user chosen time, when the notification should be triggered.
+     */
     public void startTimedNoteWorker(Date date){
         //set a tag to be able to cancel all work of this type if needed
         final String workTag = "notificationWork";
@@ -540,12 +567,23 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         WorkManager.getInstance(getApplicationContext()).enqueue(notificationWork);
     }
 
+    /**
+     * Get the user chosen time and current time, and send them to another method that
+     * calculates the difference in milliseconds.
+     * @param  date user chosen time, when the notification should be triggered.
+     * @return time difference in milliseconds.
+     */
     public long calculateDelay(Date date){
         Date date2 = new Date();
-
         return getDateDiff(date, date2);
     }
 
+    /**
+     * Calculate time difference between two dates.
+     * @param  date1 later date
+     * @param  date2 earlier date
+     * @return time difference in milliseconds.
+     */
     public static long getDateDiff(Date date1, Date date2) {
         long diffInMillies = date1.getTime() - date2.getTime();
         return diffInMillies;
