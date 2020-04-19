@@ -155,7 +155,12 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
     }
 
 
-
+    /**
+     * Method is called when user clicks the choose tags button in the xml.
+     *
+     * This opens a new tagsDialog dialog that shows all of the tags the user can choose from.
+     * @param v the view from xml.
+     */
     public void chooseTags(View v) {
         tagsDialog.chooseTags();
     }
@@ -182,11 +187,20 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         }
     }
 
+    /**
+     * Used to request permission from the user to write to the storage and record audio.
+     */
     private void requestPermission() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 RECORD_AUDIO);
     }
 
+    /**
+     * Method checks the results of the permission prompt and gives a appropriate toast message.
+     * @param requestCode the request code
+     * @param permissions all of the permissions
+     * @param grantResults all of the results
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
@@ -200,12 +214,20 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         }
     }
 
+    /**
+     * Used to check the permission from the user to write to the storage and access to recording audio.
+     * @return if the access is granted return true else false
+     */
     private boolean checkPermissionFromDevice() {
         int write_external_storage_result = ActivityCompat.checkSelfPermission(getApplication(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int record_audio_result = ActivityCompat.checkSelfPermission(getApplication(), Manifest.permission.RECORD_AUDIO);
         return write_external_storage_result == PackageManager.PERMISSION_GRANTED && record_audio_result == PackageManager.PERMISSION_GRANTED;
     }
 
+    /**
+     * Method is used to set up the media recorder each time a new audio file needs to be created
+     * with the wanted output file name.
+     */
     private void setupMediaRecorder() {
         myAudioRecorder = new MediaRecorder();
         myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -214,6 +236,12 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         myAudioRecorder.setOutputFile(outputFileForAudio);
     }
 
+    /**
+     * The stop recording method is called when the stop recording button is enabled (only when the user is recoding voice)
+     * and upon clicking it the recorder stops itself nad the appropriate buttons are set enabled and disabled.
+     * After all of this a toast message is displayed to the user to notify them of the stopped recorder.
+     * @param v the view from xml.
+     */
     public void stopRecord(View v) {
         myAudioRecorder.stop();
         addBtn.setEnabled(true);
@@ -223,6 +251,15 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         hasRecorded = true;
     }
 
+    /**
+     * The method is called when the user clicks the startRecord button in the xml view.
+     *
+     * The method checks for permission first from the user, if there is already permission to record
+     * and access the users camera and voice recording. If there is not, the user is prompted the question.
+     * If there is permission the media recorder is set up and the recording begins and the appropriate buttons
+     * are set enabled and disabled.
+     * @param v the view from xml.
+     */
     public void startRecord(View v) {
         addBtn.setEnabled(false);
         if(checkPermissionFromDevice()) {
@@ -245,6 +282,13 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
 
     }
 
+    /**
+     *  Method is called when the user clicks the timed note button in the activity.
+     *
+     *  Method creates a new Calendar date and sets the date pickers date as the current date and creates
+     *  a new datepicker to be displayed to the user.
+     * @param v the view from xml.
+     */
     public void timedNote(View v) {
         Calendar c = Calendar.getInstance();
         year = c.get(Calendar.YEAR);
@@ -255,6 +299,14 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         datePickerDialog.show();
     }
 
+    /**
+     *  Method is used to get the date pickers information for the year, month and date and then creating a time picker for the time to the date.
+     *
+     * @param datePicker date picker
+     * @param i the year attribute
+     * @param i1 the month attribute
+     * @param i2 the day attribute
+     */
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
         yearFinal = i;
@@ -271,9 +323,9 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
 
     /**
      * Used to set the final hour and minute attributes and display the chosenTime in the textview.
-     * @param timePicker
-     * @param i
-     * @param i1
+     * @param timePicker time picker
+     * @param i hour int
+     * @param i1 minute int
      */
     @Override
     public void onTimeSet(TimePicker timePicker, int i, int i1) {
@@ -282,6 +334,17 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         chosenTimeTV.setText( dayFinal + "-" + monthFinal + "-" + yearFinal +  " " + hourFinal + ":" + minuteFinal);
     }
 
+    /**
+     * Add note is called when the addnewnote has passed it's check.
+     *
+     * The method gathers all of the needed information about the
+     * tittle, text, image, order, audio, tags, date and note color and sends it forward to the
+     * SQLite database via the database helper. After this the user is shown a toast message
+     * telling them whether the adding the note to the database was successful or not.
+     *
+     * @param newEntryTitle the tittle of the newly created note
+     * @param newEntryNote the text of the newly created note
+     */
     public void addNote(String newEntryTitle, String newEntryNote) {
         orderId = Util.getNewOrderId(this);
         if(pickedImgUri != null){
@@ -442,7 +505,6 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
             myAudioRecorder.stop();
             File file = new File(outputFileForAudio);
             boolean deleted = file.delete();
-            Log.d("AUDIODELETED", deleted + " audio deleted");
         }
 
         Intent i= new Intent(NewNoteActivity.this,MainActivity.class);
