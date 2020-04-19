@@ -5,9 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.text.InputType;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -18,7 +15,6 @@ import androidx.appcompat.app.AlertDialog;
 import static android.content.Context.MODE_PRIVATE;
 
 public class TagsDialog extends AlertDialog {
-//    Button tagsButton;
     TextView chosenTags;
     String[] tagsArray;
     boolean[] checkedTags;
@@ -30,7 +26,6 @@ public class TagsDialog extends AlertDialog {
         super(context);
         sharedPreferences = context.getSharedPreferences("tags", MODE_PRIVATE);
         addTags();
-        Log.d("GOTHERE", context.getClass().toString());
         if(context.getClass().toString().contains("EditNoteActivity")) {
             chosenTags = (TextView) ((Activity)context).findViewById(R.id.chosenNewTags);
         } else {
@@ -155,7 +150,6 @@ public class TagsDialog extends AlertDialog {
                 tagsArray = temp;
                 checkedTags = tempBoolArray;
                 for(int i = 0; i < tagsArray.length; i++) {
-                    Log.d("TAGSTOPRINT", tagsArray[i] + " " + checkedTags[i]);
                     updateTagsPrefs("tag"+i, tagsArray[i]);
                 }
                 updateTagsPrefs("tagArray-length", tagsArray.length +"");
