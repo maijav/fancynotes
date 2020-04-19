@@ -1,20 +1,14 @@
 package fi.example.fancynotes;
 
-import android.app.LauncherActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.ActionMenuView;
@@ -23,17 +17,21 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * Create card view activity that shows all notes in a recycler view. The stored data (in SQLite) is passed on to
+ * the recycler view adapter that then converts data to card view items.
+ * In card view activity, user can open notes by clicking them.
+ * User can also order notes by drag-and-drop method and filter notes that have tags in them.
+ *
+ * @author  Hanna Tuominen
+ * @author  Maija Visala
+ * @version 3.0
+ * @since   2020-03-09
+ */
 public class CardViewActivity extends AppCompatActivity{
 
     String notes;
@@ -46,6 +44,10 @@ public class CardViewActivity extends AppCompatActivity{
     int orderIdOfDeleted = 0;
     private ActionMenuView amvMenu;
 
+    /**
+     * Lifecycle method for building the initial state of the activity.
+     * @param savedInstanceState bundle object that is passed into method (used for restoring state if needed).
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,9 +73,9 @@ public class CardViewActivity extends AppCompatActivity{
         Intent intent = getIntent();
         if(intent.hasExtra("fi.example.fancynotes.orderidofdeleted")) {
             orderIdOfDeleted =  intent.getExtras().getInt("fi.example.fancynotes.orderidofdeleted");
-            Log.d("ORDERIDAFTERDELETE",  " FOUND " + orderIdOfDeleted);
         }
 
+        //Go though data in SQLite and add to a notes list that forms the items in card view
         while(data.moveToNext()){
             int id = data.getInt(0);
             int orderId = data.getInt(1);
@@ -81,7 +83,6 @@ public class CardViewActivity extends AppCompatActivity{
                 mDatabaseHelper.updateOrderId(id,orderId-1);
                 orderId--;
             }
-            Log.d("ORDERIDAFTERDELETE", orderId + " FOUND " + orderIdOfDeleted + " deleted one had");
             String title = data.getString(2);
             String text = data.getString(3);
             String backGround = data.getString(4);
@@ -89,26 +90,23 @@ public class CardViewActivity extends AppCompatActivity{
             String voiceUri = data.getString(6);
             String tags = data.getString(7);
             String dateS = data.getString(8);
-            Log.d("noteDATA", id + title + text + dateS);
-            Log.d("ORDERID", orderId + " from cardview");
             Calendar date;
             if(dateS != null) {
                 date = Util.parseStringToCalendar(dateS);
-                Log.d("DATES", dateS + " from cardview");
             } else {
                 date = null;
-                Log.d("DATES", date + " from cardview");
             }
 
-//            Log.d("noteDATA", id + title + text);
             noteList.add(new Note(id, orderId, title, text, backGround, imageUri, voiceUri, tags, date));
         }
 
+        //Create card view layout
         RecyclerView myRv = (RecyclerView) findViewById(R.id.recyclerview_id);
         final RecyclerView_Adapter myAdapter = new RecyclerView_Adapter(this, noteList);
         myRv.setLayoutManager(new GridLayoutManager(this, 2));
         myRv.setAdapter(myAdapter);
 
+        //Change order of notes
         ItemTouchHelper moveItemHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN |
                 ItemTouchHelper.UP | ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT, 0 ) {
             @Override
@@ -137,6 +135,11 @@ public class CardViewActivity extends AppCompatActivity{
         moveItemHelper.attachToRecyclerView(myRv);
     }
 
+    /**
+     * Add menu bar to the bottom part of the activity.
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -144,6 +147,11 @@ public class CardViewActivity extends AppCompatActivity{
         return true;
     }
 
+    /**
+     * Specify the activities performed when user clicks icons in the bottom menu bar.
+     * @param item item that's been pressed.
+     * @return true if an item was pressed
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -160,11 +168,18 @@ public class CardViewActivity extends AppCompatActivity{
         }
     }
 
+    /**
+     * Open NewNoteActivity.
+     */
     public void movetoNewNoteActivity(){
         Intent i= new Intent(CardViewActivity.this, NewNoteActivity.class);
         startActivity(i);
     }
 
+    /**
+     * Check which tags user has chosen to filter notes with. Notes that contain selected
+     * tags make up a new notes list.
+     */
     public void filterNotes(){
         filterTagsDialog.chooseTags();
         LocalBroadcastManager.getInstance(this).registerReceiver(new BroadcastReceiver() {
@@ -181,6 +196,13 @@ public class CardViewActivity extends AppCompatActivity{
 
     }
 
+    /**
+     * Check if there are tags in the tags array (that contains tags that user has chosen
+     * to filter notes with).
+     * Make new notes list that only contains notes that have selected tags.
+     * Create a new recycler view with only filtered notes.
+     * @param tagsArray
+     */
     public void createFilteredNoteList(ArrayList<String> tagsArray){
         if(tagsArray.isEmpty()){
             showAllNotes();
@@ -203,6 +225,9 @@ public class CardViewActivity extends AppCompatActivity{
         }
     }
 
+    /**
+     * When user presses back button they are prompted to CardViewActivity.
+     */
     @Override
     public void onBackPressed() {
         Intent i= new Intent(CardViewActivity.this,MainActivity.class);
@@ -210,6 +235,9 @@ public class CardViewActivity extends AppCompatActivity{
         finish();
     }
 
+    /**
+     * Create new recycler view that contains all saved notes.
+     */
     public void showAllNotes(){
         RecyclerView myRv = (RecyclerView) findViewById(R.id.recyclerview_id);
         final RecyclerView_Adapter myAdapter = new RecyclerView_Adapter(this, noteList);
