@@ -260,7 +260,6 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         yearFinal = i;
         monthFinal = i1; // months are indexed starting at 0
         dayFinal = i2;
-        Log.d("DATEE", i1 + " MONTH");
         Calendar c = Calendar.getInstance();
         hour = c.get(Calendar.HOUR_OF_DAY);
         minute = c.get(Calendar.MINUTE);
@@ -270,13 +269,17 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
 
     }
 
+    /**
+     * Used to set the final hour and minute attributes and display the chosenTime in the textview.
+     * @param timePicker
+     * @param i
+     * @param i1
+     */
     @Override
     public void onTimeSet(TimePicker timePicker, int i, int i1) {
         hourFinal = i;
         minuteFinal = i1;
-
         chosenTimeTV.setText( dayFinal + "-" + monthFinal + "-" + yearFinal +  " " + hourFinal + ":" + minuteFinal);
-
     }
 
     public void addNote(String newEntryTitle, String newEntryNote) {
@@ -286,32 +289,32 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
             pickedImgUri = null;
         }
 
+        // if no audio has been created make the file No audio for backend
         if(outputFileForAudio == null) {
             outputFileForAudio = "No Audio";
         }
 
+        // set the wanted timed note date
         sendForward = Calendar.getInstance();
-
         sendForward.set(yearFinal, monthFinal, dayFinal, hourFinal, minuteFinal);
-        Log.d("DATEE",  monthFinal + " MONTH " + sendForward.getTime() + " SENDFORWARDTIME");
 
         //Check if user has chosen timed note and if so, start worker for notification
         if(yearFinal != 0) {
             startTimedNoteWorker(sendForward.getTime());
         }
 
+        // if the yearFinal is 0 set the dateForward to null for the backend
         Date dateToForward;
         if(yearFinal == 0) {
             dateToForward = null;
-            Log.d("SHOULD", yearFinal +"");
         } else  {
             dateToForward = sendForward.getTime();
-            Log.d("SHOULD", yearFinal +"");
         }
 
         //Add data to SQLite database
         boolean insertData = mDatabaseHelper.addData(orderId,newEntryTitle, newEntryNote, noteBackground, imageUri, outputFileForAudio, tagsDialog.getSelectedTags(), dateToForward);
 
+        // Inform the user about the success of inserting of the note to the database.
         if(insertData) {
             toastMessage("Data successfully Inserted");
             Intent i = new Intent(this, CardViewActivity.class);
@@ -321,12 +324,24 @@ public class NewNoteActivity extends AppCompatActivity implements CameraDialog_F
         }
     }
 
+    /**
+     * Method to create new toast messages with different messages.
+     * @param message the message wanted to display.
+     */
     private void toastMessage(String message) {
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Method used when clicking the 'add' button in the activity.
+     *
+     * The method checks if the tittle and text of the note has been set or not and proceeds accordingly.
+     *
+     * If the tittle and note has been set the method calls addNote method with their texts and if not
+     * the method gives the user a toast message informing them that they need to set the tittle and note text.
+     * @param v the view from xml.
+     */
     public void addNewNote(View v) {
-        Log.d("NewNoteActivityAdd","works");
         String newEntryNote = editTextNote.getText().toString();
         String newEntryTitle = editTextTitle.getText().toString();
         if(editTextNote.length() != 0 && editTextTitle.length() != 0) {
