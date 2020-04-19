@@ -5,14 +5,20 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import java.util.ArrayList;
-
 import static android.content.Context.MODE_PRIVATE;
 
+/**
+ * Alert dialog that prompts user to choose which tags they want to filter
+ * the notes with. User can choose from the tags that are created previously
+ * and saved to shared preferences.
+ *
+ * @author Maija Visala
+ * @version 3.0
+ * @since 2020-03-09
+ */
 public class FilterTagsDialog extends AlertDialog{
 
     SharedPreferences sharedPreferences;
@@ -21,12 +27,20 @@ public class FilterTagsDialog extends AlertDialog{
     ArrayList<Integer> mSelectedTags = new ArrayList<>();
     ArrayList<String> chosenTags;
 
+    /**
+     * Constructor for FilterTagsDialog. Fetches saved notes from shared preferences.
+     * @param context the application context
+     */
     protected FilterTagsDialog(Context context) {
         super(context);
         sharedPreferences = context.getSharedPreferences("tags", MODE_PRIVATE);
         addTags();
     }
 
+    /**
+     * Get array that contains selected tags. Put tags array in intent extras and
+     * send broadcast for other acivities to use.
+     */
     public void getSelectedTags() {
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(getContext());
         Intent i = new Intent("filterTags");
@@ -36,7 +50,10 @@ public class FilterTagsDialog extends AlertDialog{
         manager.sendBroadcast(i);
     }
 
-    //Add tags found in shared preferences to tagsArray (String)
+    /**
+     * Add tags found in shared preferences to an array.
+     * Create new array that specifies which tags are chosen (true) and which are not (false)
+     */
     public void addTags() {
         int tagsArrayLength;
         try{
@@ -52,7 +69,12 @@ public class FilterTagsDialog extends AlertDialog{
         checkedTags = new boolean[tagsArray.length];
     }
 
-    //Choose tags to filter notes
+    /**
+     * Dialog where user can see tags that they have saved earlier and check the boxes
+     * to pick the tags they want to filter notes list with.
+     * When user clicks "OK" the selected tags are added to chosen tags array.
+     * "Dismiss" button cancels the activity.
+     */
     public void chooseTags() {
         chosenTags = new ArrayList<String>();
 
@@ -95,6 +117,11 @@ public class FilterTagsDialog extends AlertDialog{
         mDialog.show();
     }
 
+    /**
+     * Get tags data from shared preferences.
+     * @param field to determine, which data is fetched from shared preferences.
+     * @return tags in string format
+     */
     private String getTagsPrefs(String field) {
         return sharedPreferences.getString(field, "");
     }
